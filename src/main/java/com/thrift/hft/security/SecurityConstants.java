@@ -17,4 +17,8 @@ public class SecurityConstants {
     public static final String TRUE = "true";
     public static final String CLAIMS = "claims";
 
+    public static final String FILTER_LOGIN_URL = "/delcap/v1/auth/login";
+    public static final String EMAIL = "email";
+
+
 }
