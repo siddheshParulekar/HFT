@@ -23,11 +23,11 @@ import static com.thrift.hft.security.SecurityConstants.ACCESS_CONTROL_EXPOSE_HE
 public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+//    @Bean
+//    @Override
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        return super.authenticationManagerBean();
+//    }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {

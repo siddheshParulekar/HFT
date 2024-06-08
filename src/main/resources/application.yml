@@ -1,1 +1,19 @@
-spring.application.name=hft
+server:
+  port: 8080
+  servlet:
+    context-path: /hustleFreeThrift
+
+spring:
+  jackson:
+    time-zone: Asia/Kolkata
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/HFT
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    hikari:
+      connection-timeout: 5000
