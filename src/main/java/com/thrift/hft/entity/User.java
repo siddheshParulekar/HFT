@@ -1,6 +1,8 @@
 package com.thrift.hft.entity;
 
+import com.thrift.hft.enums.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "\"user\"")
 @Entity
+@Builder
 public class User {
 
     @Id
@@ -21,11 +24,12 @@ public class User {
     @Column(length = 255)
     String lastname;
     Long mobileNumber;
-    String countryCode;
     String email;
-    String location;
     @Column(length = 255)
     String username;
     String password;
+    @Enumerated(EnumType.STRING)
+    Role role;
+    @Builder.Default
     Boolean isActive = Boolean.TRUE;
 }

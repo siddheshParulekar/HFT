@@ -19,6 +19,7 @@ public class SecurityConstants {
 
     public static final String FILTER_LOGIN_URL = "/delcap/v1/auth/login";
     public static final String EMAIL = "email";
+    public static final String FILTER_REGISTER_URL ="/hustleFreeThrift/user/register";
 
 
 }

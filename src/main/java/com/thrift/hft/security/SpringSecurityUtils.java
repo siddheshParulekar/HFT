@@ -45,7 +45,7 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
         httpSecurity
                 .headers().addHeaderWriter((request, response) -> response.setHeader(ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)).and().csrf().disable().authorizeRequests()
-                .antMatchers("/HFT/v1/authenticate/login").permitAll()
+                .antMatchers("/user/register").permitAll()
                 .antMatchers(HttpHeaders.ALLOW).permitAll()
                 .anyRequest().authenticated()
                 .and().httpBasic().and()

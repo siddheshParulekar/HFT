@@ -75,7 +75,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     private Boolean skipAuth(String requestUri) {
-        if (requestUri.contains(FILTER_LOGIN_URL))
+        if (requestUri.contains(FILTER_REGISTER_URL))
             return Boolean.TRUE;
         return Boolean.FALSE;
     }

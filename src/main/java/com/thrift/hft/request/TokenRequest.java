@@ -1,4 +1,4 @@
-package com.thrift.hft;
+package com.thrift.hft.request;
 
 
 import lombok.AccessLevel;

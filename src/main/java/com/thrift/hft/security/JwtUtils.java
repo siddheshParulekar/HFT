@@ -1,6 +1,6 @@
 package com.thrift.hft.security;
 
-import com.thrift.hft.TokenRequest;
+import com.thrift.hft.request.TokenRequest;
 import com.thrift.hft.entity.AccessToken;
 import com.thrift.hft.exceptions.UnAuthorizedException;
 import com.thrift.hft.repository.AccessTokenRepository;
