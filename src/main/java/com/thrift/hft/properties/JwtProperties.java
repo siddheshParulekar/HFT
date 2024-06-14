@@ -15,4 +15,7 @@ import javax.validation.constraints.NotNull;
 public class JwtProperties {
     @NotEmpty
     private String secretKey;
+
+    @NotNull
+    private Long expiryTime;
 }

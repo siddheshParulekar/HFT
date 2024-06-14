@@ -35,9 +35,6 @@ public class UserServiceUtils {
         if (optionalUser.isEmpty())
             throw new NotFoundException(ERROR_USER_NOT_FOUND);
 
-        Optional<UserRoles> optionalUserRoles = userRolesRepository.findByUserId(userId);
-        if (optionalUserRoles.isEmpty())
-            throw new NotFoundException(ERROR_USER_ROLE_NOT_FOUND);
         return optionalUser.get();
     }
 

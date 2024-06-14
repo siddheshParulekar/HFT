@@ -1,5 +1,6 @@
 package com.thrift.hft.security;
 
+import com.thrift.hft.properties.JwtProperties;
 import com.thrift.hft.request.TokenRequest;
 import com.thrift.hft.entity.AccessToken;
 import com.thrift.hft.exceptions.UnAuthorizedException;
@@ -11,6 +12,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -24,21 +26,23 @@ import static com.thrift.hft.security.SecurityConstants.CLAIM_USER_ROLE_ID;
 @Slf4j
 @Component
 @AllArgsConstructor
+@EnableConfigurationProperties(JwtProperties.class)
 public class JwtUtils extends UserServiceUtils {
 
     private static final String SECRET_KEY = "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3";
 
     private static final int TOKEN_VALIDITY = 3600 * 5;
+    private final JwtProperties jwtProperties;
 
     @Autowired
     private AccessTokenRepository accessTokenRepository;
 
     public Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(token).getBody();
     }
 
     public String getClaimFromToken(String token, String key) {
-        Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(token).getBody();
         if (claims.containsKey(key))
             return claims.get(key).toString();
         return null;
@@ -53,8 +57,8 @@ public class JwtUtils extends UserServiceUtils {
         claims.put(CLAIM_AUTHORITIES, tokenRequest.getAuthority());
 
         return BEARER + Jwts.builder().setClaims(claims).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiryTime()))
+                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey()).compact();
     }
 
     public Boolean validateToken(String token) {
@@ -62,7 +66,7 @@ public class JwtUtils extends UserServiceUtils {
         try {
             Optional<AccessToken> optionalAccessToken = accessTokenRepository.findByTokenAndIsValid(token,Boolean.FALSE);
             if (optionalAccessToken.isEmpty()) {
-                Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+                Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(token);
 
                 isUserValid(Long.valueOf(getClaimFromToken(token, CLAIM_USERID)));
                 return true;
