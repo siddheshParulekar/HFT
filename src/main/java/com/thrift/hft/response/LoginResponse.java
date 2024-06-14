@@ -1,5 +1,6 @@
 package com.thrift.hft.response;
 
+import com.thrift.hft.dto.UserDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,10 +11,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TokenResponse {
-    Long userId;
-    String email;
-    String name;
-    String username;
-    String authority;
+public class LoginResponse {
+    UserDTO userDTO;
+    String token;
 }
+

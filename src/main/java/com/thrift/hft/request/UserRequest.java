@@ -50,9 +50,7 @@ public class UserRequest {
     @NotEmpty(message = "Enter valid Password")
     String password;
 
-
-//    @NotEmpty(message = "Enter valid Gender")
-//    @Pattern(regexp = "BUYER|SELLER", message = "Invalid Gender")
-//    String role;
+    @NotNull
+    Role role;
 }
 

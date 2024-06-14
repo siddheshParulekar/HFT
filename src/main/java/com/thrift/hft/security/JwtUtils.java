@@ -26,7 +26,7 @@ import static com.thrift.hft.security.SecurityConstants.CLAIM_USER_ROLE_ID;
 @AllArgsConstructor
 public class JwtUtils extends UserServiceUtils {
 
-    private static final String SECRET_KEY = "HFT";
+    private static final String SECRET_KEY = "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3";
 
     private static final int TOKEN_VALIDITY = 3600 * 5;
 
@@ -47,13 +47,10 @@ public class JwtUtils extends UserServiceUtils {
     public String generateToken(TokenRequest tokenRequest) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_USERID, tokenRequest.getUserId());
-        claims.put(CLAIM_USER_ROLE_ID, tokenRequest.getUserRoleId());
         claims.put(CLAIM_EMAIL, tokenRequest.getEmail());
         claims.put(CLAIM_FULLNAME, tokenRequest.getName());
         claims.put(CLAIM_USERNAME, tokenRequest.getUsername());
         claims.put(CLAIM_AUTHORITIES, tokenRequest.getAuthority());
-        claims.put(CLAIM_ROLE_ID, tokenRequest.getRoleId());
-        claims.put(CLAIM_USER_TYPE, tokenRequest.getUserType());
 
         return BEARER + Jwts.builder().setClaims(claims).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))

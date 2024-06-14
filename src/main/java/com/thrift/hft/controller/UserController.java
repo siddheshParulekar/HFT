@@ -1,6 +1,7 @@
 package com.thrift.hft.controller;
 
 import com.thrift.hft.dto.ResponseDTO;
+import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.service.IUserService;
 import com.thrift.hft.utils.CommonUtils;
@@ -9,11 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -35,5 +32,12 @@ public class UserController {
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Valid UserRequest userRequest) {
         logger.info("UserController- inside registerUser method");
         return ResponseEntityUtils.get(userService.addUser(userRequest), MSG_USER_ADDED);
+    }
+
+    @PutMapping("update-address/{userId}")
+    public ResponseEntity<ResponseDTO> updateAddress(@PathVariable("userId") Long userId, @RequestBody @Valid UpdateUserRequest updateUserRequest,
+                                                     HttpServletRequest request) {
+        logger.info("UserController- inside registerUser method");
+        return ResponseEntityUtils.get(userService.updateUser(userId,updateUserRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), MSG_USER_ADDED);
     }
 }

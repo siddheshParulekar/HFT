@@ -13,11 +13,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TokenRequest {
     Long userId;
-    Long userRoleId;
     String email;
     String authority; //RoleName
     String name;
     String username;
-    Long roleId;
-    String userType;
 }

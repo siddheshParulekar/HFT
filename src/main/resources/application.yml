@@ -17,3 +17,6 @@ spring:
     show-sql: true
     hikari:
       connection-timeout: 5000
+hft:
+  jwt:
+    secret-key: "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3"
