@@ -1,0 +1,23 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /hustleFreeThrift
+
+spring:
+  jackson:
+    time-zone: Asia/Kolkata
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/HFT
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    hikari:
+      connection-timeout: 5000
+hft:
+  jwt:
+    secret-key: "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3"
+    expiry-time: 60000000
