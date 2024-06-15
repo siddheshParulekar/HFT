@@ -26,8 +26,6 @@ public class User {
     String lastname;
     Long mobileNumber;
     String email;
-    @Column(length = 255)
-    String username;
     String password;
     @Enumerated(EnumType.STRING)
     Role role;
@@ -36,6 +34,6 @@ public class User {
     String address;
 
     public UserDTO getUserDTO() {
-        return new UserDTO(id, firstname, lastname,  mobileNumber, email ,username, role,isActive,address);
+        return new UserDTO(id, firstname, lastname,  mobileNumber, email , role,isActive,address);
     }
 }

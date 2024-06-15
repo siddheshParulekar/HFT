@@ -18,7 +18,6 @@ public class UserDTO {
     String lastname;
     Long mobileNumber;
     String email;
-    String username;
     Role role;
     Boolean isActive;
     String address;

@@ -53,7 +53,6 @@ public class JwtUtils extends UserServiceUtils {
         claims.put(CLAIM_USERID, tokenRequest.getUserId());
         claims.put(CLAIM_EMAIL, tokenRequest.getEmail());
         claims.put(CLAIM_FULLNAME, tokenRequest.getName());
-        claims.put(CLAIM_USERNAME, tokenRequest.getUsername());
         claims.put(CLAIM_AUTHORITIES, tokenRequest.getAuthority());
 
         return BEARER + Jwts.builder().setClaims(claims).setIssuedAt(new Date(System.currentTimeMillis()))

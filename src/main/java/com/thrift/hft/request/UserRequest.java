@@ -26,10 +26,6 @@ public class UserRequest {
     @Pattern(regexp = "^[a-zA-Z]*$", message = "Enter valid Last Name")
     String lastname;
 
-    @NotEmpty(message = "Enter valid Gender")
-    @Pattern(regexp = "Male|Female|Others", message = "Invalid Gender")
-    String gender;
-
     @NotNull(message = "Enter valid Mobile Number")
     @Pattern(regexp = "^[6789]\\d{9}$", message = "Mobile number should contain 10 digits")
     String mobileNumber;
@@ -40,10 +36,7 @@ public class UserRequest {
 
     @NotEmpty(message = "Enter valid Location")
     @Pattern(regexp = "^[a-zA-Z ]*$", message = "Enter valid Location")
-    String location;
-
-    @NotEmpty(message = "Enter valid username")
-    String username;
+    String address;
 
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=*_])(?=\\S+$).{8,16}$",
             message = "Password must contain atleast 1 Uppercase, 1 Lowercase, 1 Special character from (!@#$%^&+=*_) and 1 Digit. Password size must be min 8 and max 16.")

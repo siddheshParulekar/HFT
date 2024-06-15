@@ -16,5 +16,4 @@ public class TokenRequest {
     String email;
     String authority; //RoleName
     String name;
-    String username;
 }

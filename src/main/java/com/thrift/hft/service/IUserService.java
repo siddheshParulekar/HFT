@@ -8,7 +8,7 @@ import com.thrift.hft.response.TokenResponse;
 
 public interface IUserService {
 
-    User addUser(UserRequest userRequest) ;
+    UserDTO addUser(UserRequest userRequest) ;
 
     UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest, TokenResponse tokenResponse);
 

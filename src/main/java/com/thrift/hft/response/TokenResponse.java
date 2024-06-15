@@ -14,6 +14,5 @@ public class TokenResponse {
     Long userId;
     String email;
     String name;
-    String username;
     String authority;
 }

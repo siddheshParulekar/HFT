@@ -26,11 +26,11 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public User addUser(UserRequest userRequest) {
+    public UserDTO addUser(UserRequest userRequest) {
         logger.info("UserServiceImpl - Inside addUser method");
         Optional<User> optionalUser = userRepository.findByEmail(userRequest.getEmail());
         if (optionalUser.isPresent() && (optionalUser.get().getEmail().equals(userRequest.getEmail())))
-            throw new AlreadyExistsException("ERROR_USER_WITH_SAME_EMAIL_ALREADY_EXISTS");
+            throw new AlreadyExistsException("Error user with same email already exists");
 
         return userRepository.save( User.builder()
                 .email(userRequest.getEmail())
@@ -38,8 +38,8 @@ public class UserServiceImpl implements IUserService {
                 .firstname(userRequest.getFirstname())
                 .lastname(userRequest.getLastname())
                 .mobileNumber(Long.parseLong(userRequest.getMobileNumber()))
-                        .username(userRequest.getUsername())
-                .password(CommonUtils.encodePassword(userRequest.getPassword())).build());
+                        .address(userRequest.getAddress())
+                .password(CommonUtils.encodePassword(userRequest.getPassword())).build()).getUserDTO();
     }
 
     @Override

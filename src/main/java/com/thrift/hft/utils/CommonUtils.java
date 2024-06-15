@@ -28,7 +28,7 @@ public class CommonUtils {
     public static TokenResponse getTokenResponse(String token) {
         Claims claims = Jwts.parser().setSigningKey(properties.getSecretKey()).parseClaimsJws(token.substring(7)).getBody();
         return new TokenResponse(Long.valueOf(claims.get(CLAIM_USERID).toString()), claims.get(CLAIM_EMAIL).toString(),
-                claims.get(CLAIM_FULLNAME).toString(), claims.get(CLAIM_USERNAME).toString(), claims.get(CLAIM_AUTHORITIES).toString());
+                claims.get(CLAIM_FULLNAME).toString(), claims.get(CLAIM_AUTHORITIES).toString());
     }
 
 
