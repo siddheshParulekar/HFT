@@ -28,7 +28,9 @@ import static com.thrift.hft.security.SecurityConstants.*;
 public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
     public static final String[] PUBLIC_URLS={
-            "/v1/user/register","/v1/auth/login","/v2/api-docs"};
+            "/v1/user/register","/v1/auth/login","/v2/api-docs"
+    ,"/v1/home-page/**"};
+
     @Value("${custom.security.username}")
     private String username;
 

@@ -3,6 +3,7 @@ package com.thrift.hft.service.serviceImpl;
 import com.thrift.hft.dto.UserDTO;
 import com.thrift.hft.entity.User;
 import com.thrift.hft.exceptions.AlreadyExistsException;
+import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
 import com.thrift.hft.repository.UserRepository;
 import com.thrift.hft.request.UpdateUserRequest;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,6 +45,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest, TokenResponse tokenResponse) {
         logger.info("UserServiceImpl - Inside updateUser method");
+
+        if (!Objects.equals(tokenResponse.getUserId(), userId))
+            throw new InvalidException("You cannot change details of other user");
 
         User user = userRepository.findById(userId).orElseThrow(()->new NotFoundException("User Not Found with this userId"));
 
