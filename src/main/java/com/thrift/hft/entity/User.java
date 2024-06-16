@@ -1,5 +1,6 @@
 package com.thrift.hft.entity;
 
+import com.thrift.hft.audit.Auditable;
 import com.thrift.hft.dto.UserDTO;
 import com.thrift.hft.enums.Role;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Table(name = "\"user\"")
 @Entity
 @Builder
-public class User {
+public class User extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
