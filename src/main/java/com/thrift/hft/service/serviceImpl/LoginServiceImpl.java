@@ -63,7 +63,7 @@ public class LoginServiceImpl implements ILoginService {
        // userServiceUtils.updateAccessToken(user.getId());
         LoginResponse loginResponse = new LoginResponse(user.getUserDTO(), jwtUtils.generateToken(new TokenRequest(user.getId(),
                      user.getEmail(),user.getRole().name(),
-                    CommonUtils.getName(user.getFirstname(), user.getLastname()))));
+                user.getName())));
             accessTokenRepository.save(new AccessToken(loginResponse.getToken().replace(BEARER, ""), user.getId()));
             return loginResponse;
 

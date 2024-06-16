@@ -35,10 +35,8 @@ public class UserServiceImpl implements IUserService {
         return userRepository.save( User.builder()
                 .email(userRequest.getEmail())
                .role(userRequest.getRole())
-                .firstname(userRequest.getFirstname())
-                .lastname(userRequest.getLastname())
+                .name(userRequest.getName())
                 .mobileNumber(Long.parseLong(userRequest.getMobileNumber()))
-                        .address(userRequest.getAddress())
                 .password(CommonUtils.encodePassword(userRequest.getPassword())).build()).getUserDTO();
     }
 

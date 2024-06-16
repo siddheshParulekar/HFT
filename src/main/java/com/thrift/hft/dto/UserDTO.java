@@ -14,8 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class UserDTO {
 
     Long id;
-    String firstname;
-    String lastname;
+    String name;
     Long mobileNumber;
     String email;
     Role role;
