@@ -21,9 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(length = 255)
-    String firstname;
-    @Column(length = 255)
-    String lastname;
+    String name;
     Long mobileNumber;
     String email;
     String password;
@@ -34,6 +32,6 @@ public class User {
     String address;
 
     public UserDTO getUserDTO() {
-        return new UserDTO(id, firstname, lastname,  mobileNumber, email , role,isActive,address);
+        return new UserDTO(id, name,  mobileNumber, email , role,isActive,address);
     }
 }

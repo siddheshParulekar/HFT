@@ -47,7 +47,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String email = null;
         String jwtToken;
-
         if (requestTokenHeader != null && requestTokenHeader.startsWith(BEARER)) {
             jwtToken = requestTokenHeader.substring(7);
             try {
@@ -75,7 +74,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     private Boolean skipAuth(String requestUri) {
-        if (requestUri.contains(FILTER_REGISTER_URL) || requestUri.contains("/hustleFreeThrift/v1/auth/login"))
+        if (requestUri.contains(FILTER_REGISTER_URL) || requestUri.contains("/hustleFreeThrift/v1/auth/login")
+              || requestUri.contains("/hustleFreeThrift/v2/api-docs") || requestUri.contains("swagger")  || requestUri.contains(FILTER_SWAGGER_URL) || requestUri.contains(FILTER_SWAGGER_API_DOCS_URL)
+                || requestUri.contains(FILTER_VALIDATE_OTP) || requestUri.contains(FILTER_FORGOT_PASSWORD_SUPERADMIN_URL)
+                )
             return Boolean.TRUE;
         return Boolean.FALSE;
     }

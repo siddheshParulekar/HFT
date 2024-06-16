@@ -2,7 +2,10 @@ server:
   port: 8081
   servlet:
     context-path: /hustleFreeThrift
-
+custom:
+  security:
+    username: local
+    password: local
 spring:
   jackson:
     time-zone: Asia/Kolkata
@@ -17,6 +20,9 @@ spring:
     show-sql: true
     hikari:
       connection-timeout: 5000
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
 hft:
   jwt:
     secret-key: "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3"

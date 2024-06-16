@@ -19,7 +19,7 @@ import static com.thrift.hft.constants.GeneralMsgConstant.MSG_USER_ADDED;
 import static com.thrift.hft.security.SecurityConstants.AUTHORIZATION;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/v1/user")
 public class UserController {
 
     private static final Logger logger = LogManager.getLogger(UserController.class);
