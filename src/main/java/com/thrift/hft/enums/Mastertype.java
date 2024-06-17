@@ -2,5 +2,10 @@ package com.thrift.hft.enums;
 
 public enum Mastertype {
 
-    ROLE
+    ROLE,
+    BRAND,
+    CATEGORY,
+    CONDITION,
+    SUBCATEGORYM,
+    SUBCATEGORYW;
 }
