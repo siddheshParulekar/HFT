@@ -9,6 +9,29 @@ custom:
 spring:
   jackson:
     time-zone: Asia/Kolkata
+  servlet:
+    multipart:
+      max-file-size: 5242880
+      max-request-size: 31457280
+  active-mq:
+    broker-url: tcp://localhost:61616
+    packages:
+      trust-all: false
+      trusted: com.thrift.hft
+    pool:
+      block-if-full: true
+      block-if-full-timeout: -1
+      enabled: false
+      idle-timeout: 30000
+      max-connections: 1
+      time-between-expiration-check: -1
+      use-anonymous-producers: true
+  jms:
+     listener:
+        concurrency: 1
+        max-concurrency: 1
+     template:
+          delivery-mode: non_persistent
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/HFT
