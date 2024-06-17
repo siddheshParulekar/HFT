@@ -57,9 +57,9 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
             CorsConfiguration corsConfig = new CorsConfiguration().applyPermitDefaultValues();
             List<String> originList = Arrays.asList(origins.split(","));
             corsConfig.setAllowedOrigins(originList);
-            corsConfig.addAllowedMethod(HttpMethod.PUT);
-            corsConfig.addAllowedMethod(HttpMethod.DELETE);
-            corsConfig.addAllowedMethod(HttpMethod.PATCH);
+            corsConfig.setAllowedMethods(Arrays.asList("GET", "POST","PUT","DELETE"));
+            corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+            corsConfig.addAllowedHeader("*");
             return corsConfig;
         });
 
