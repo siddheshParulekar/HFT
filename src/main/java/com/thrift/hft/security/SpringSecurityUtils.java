@@ -19,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.thrift.hft.security.SecurityConstants.*;
 
 
@@ -39,6 +42,8 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtRequestFilter requestFilter;
+    @Value("${app.cors.origins}")
+    private String origins;
 
     @Bean
     @Override
@@ -50,6 +55,8 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().configurationSource(request -> {
             CorsConfiguration corsConfig = new CorsConfiguration().applyPermitDefaultValues();
+            List<String> originList = Arrays.asList(origins.split(","));
+            corsConfig.setAllowedOrigins(originList);
             corsConfig.addAllowedMethod(HttpMethod.PUT);
             corsConfig.addAllowedMethod(HttpMethod.DELETE);
             corsConfig.addAllowedMethod(HttpMethod.PATCH);
