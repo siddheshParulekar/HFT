@@ -30,4 +30,4 @@ hft:
 
 app:
   cors:
-    origins: ${CORS_ORIGINS:http://localhost:8081/}
+    origins: ${CORS_ORIGINS:http://localhost:8081/,http://localhost:4200}
