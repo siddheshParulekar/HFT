@@ -11,6 +11,7 @@ spring:
     time-zone: Asia/Kolkata
   servlet:
     multipart:
+      enabled: true
       max-file-size: 5242880
       max-request-size: 31457280
   active-mq:
@@ -50,6 +51,8 @@ hft:
   jwt:
     secret-key: "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3"
     expiry-time: 60000000
+  queue:
+    sell-request-queue: sell-request-queue
 
 app:
   cors:

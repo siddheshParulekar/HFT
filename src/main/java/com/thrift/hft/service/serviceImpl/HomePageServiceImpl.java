@@ -35,8 +35,9 @@ public class HomePageServiceImpl implements IHomePageService {
             return Arrays.stream(Condition.values()).map(condition -> new MasterDTO(condition.name(), String.valueOf(condition.value()))).collect(Collectors.toList());
         }else if (masterType.equals(Mastertype.SUBCATEGORYW)) {
             return Arrays.stream(SubCategoryW.values()).map(subCategoryW -> new MasterDTO(subCategoryW.name(), String.valueOf(subCategoryW.value()))).collect(Collectors.toList());
-        }
-        else
+        } else if (masterType.equals(Mastertype.SIZE)) {
+            return Arrays.stream(Size.values()).map(size -> new MasterDTO(size.name(), String.valueOf(size.value()))).collect(Collectors.toList());
+        } else
             throw new InvalidException("Invalid Master type");
     }
 }

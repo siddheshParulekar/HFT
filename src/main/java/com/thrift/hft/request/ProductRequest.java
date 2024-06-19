@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Part;
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,5 +25,5 @@ public class ProductRequest {
     SubCategoryM subCategoryM;
     SubCategoryW subCategoryW;
     Brand brand;
-    MultipartFile[] images;
+    List<Part> images;
 }

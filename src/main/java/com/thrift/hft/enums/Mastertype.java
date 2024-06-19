@@ -7,5 +7,6 @@ public enum Mastertype {
     CATEGORY,
     CONDITION,
     SUBCATEGORYM,
-    SUBCATEGORYW;
+    SUBCATEGORYW,
+    SIZE;
 }

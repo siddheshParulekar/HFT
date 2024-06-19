@@ -75,4 +75,76 @@ public class GlobalExceptionAdvisor extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(ret, status);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<Object> handleExceptions(RuntimeException ex) {
+        Class<?> clz = ex.getClass();
+
+        String message = ErrorMsgConstants.ERROR_INTERNAL_SERVER;
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        if (ex instanceof AccessDeniedException) {
+            message = "You are not authorized to access this request";
+            status = HttpStatus.NOT_ACCEPTABLE;
+
+        } else if (ex instanceof HttpStatusException) {
+            HttpStatusException casted = (HttpStatusException) ex;
+
+            status = casted.getCode();
+            if(casted.getReason() != null && !casted.getReason().isEmpty())
+                message = casted.getReason();
+
+        } else if (clz.isAnnotationPresent(ResponseStatus.class)) {
+            ResponseStatus anno = clz.getAnnotation(ResponseStatus.class);
+
+            status = anno.code();
+
+            if (!anno.reason().isEmpty())
+                message = anno.reason();
+        }
+
+        logger.error("{} - ", status.value(), ex);
+
+        ResponseDTO<Object> ret = new ResponseDTO<>();
+        ret.setMessage(message);
+        ret.setStatus(status.value());
+
+        return new ResponseEntity<>(ret, status);
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleExceptions(Exception ex) {
+        Class<?> clz = ex.getClass();
+
+        String message = ErrorMsgConstants.ERROR_INTERNAL_SERVER;
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        if (ex instanceof AccessDeniedException) {
+            message = "You are not authorized to access this request";
+            status = HttpStatus.NOT_ACCEPTABLE;
+
+        } else if (ex instanceof HttpStatusException) {
+            HttpStatusException casted = (HttpStatusException) ex;
+
+            status = casted.getCode();
+            if(casted.getReason() != null && !casted.getReason().isEmpty())
+                message = casted.getReason();
+
+        } else if (clz.isAnnotationPresent(ResponseStatus.class)) {
+            ResponseStatus anno = clz.getAnnotation(ResponseStatus.class);
+
+            status = anno.code();
+
+            if (!anno.reason().isEmpty())
+                message = anno.reason();
+        }
+
+        logger.error("{} - ", status.value(), ex);
+
+        ResponseDTO<Object> ret = new ResponseDTO<>();
+        ret.setMessage(message);
+        ret.setStatus(status.value());
+
+        return new ResponseEntity<>(ret, status);
+    }
 }
