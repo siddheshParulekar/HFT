@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Part;
 import java.math.BigDecimal;
@@ -22,8 +21,8 @@ public class ProductRequest {
     BigDecimal prize;
     Condition condition;
     Category category;
-    SubCategoryM subCategoryM;
-    SubCategoryW subCategoryW;
+    SubCategory subCategory;
     Brand brand;
+    Size size;
     List<Part> images;
 }

@@ -42,19 +42,27 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> sellRequest(HttpServletRequest request) throws IOException, ServletException {
         logger.info("ProductController - Inside sellRequest method");
         SellRequest productRequest = new ObjectMapper().readValue(request.getParameter("productRequest"),SellRequest.class);
-       int i=0;
-       List<Part> parts = new ArrayList<>();
-        for(Part part:request.getParts()){
-            if(part.getName().equals("productRequest"))
+        int i = 0;
+        List<Part> parts = new ArrayList<>();
+        for (Part part : request.getParts()) {
+            if (part.getName().equals("productRequest")) {
                 continue;
-            if(part.getName().equals("productRequests["+i+"]")){
-                parts.add(part);
-            }else {
-                //image set
-                productRequest.getProductRequests().get(i).setImages(new ArrayList<>(parts));
-                i++;
-                parts.clear();
             }
+            if (part.getName().equals("productRequests[" + i + "]")) {
+                parts.add(part);
+            } else {
+                // image set
+                if (!parts.isEmpty()) {
+                    productRequest.getProductRequests().get(i).setImages(new ArrayList<>(parts));
+                    parts.clear();  // Clear the parts list for the next set of images
+                }
+                i++;
+                parts.add(part);  // Add the current part to the new list
+            }
+        }
+// Set images for the last product request
+        if (!parts.isEmpty()) {
+            productRequest.getProductRequests().get(i).setImages(new ArrayList<>(parts));
         }
         List<ProductRequest> productRequestList =productRequest.getProductRequests();
 

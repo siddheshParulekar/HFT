@@ -8,10 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
@@ -26,22 +23,34 @@ public class Product extends Auditable<String> {
     Long id;
     String productName;
     BigDecimal prize;
+    @Enumerated(EnumType.STRING)
     Condition condition;
+    @Enumerated(EnumType.STRING)
     Category category;
-    SubCategoryM subCategoryM;
-    SubCategoryW subCategoryW;
+    @Enumerated(EnumType.STRING)
+    SubCategory subCategory;
+    @Enumerated(EnumType.STRING)
     Brand brand;
     Long sellerId;
+    Long batchId;
+    @Enumerated(EnumType.STRING)
+    ProdStatus prodStatus = ProdStatus.IN_STOCK;
+    @Enumerated(EnumType.STRING)
+    ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
+    @Enumerated(EnumType.STRING)
+    Size size;
 
 
-    public Product(String productName, BigDecimal prize, Condition condition, Category category, SubCategoryM subCategoryM, SubCategoryW subCategoryW, Brand brand, Long sellerId) {
+
+    public Product(String productName, BigDecimal prize, Condition condition, Category category, SubCategory subCategory, Brand brand, Long sellerId, Long batchId, Size size) {
         this.productName = productName;
         this.prize = prize;
         this.condition = condition;
         this.category = category;
-        this.subCategoryM = subCategoryM;
-        this.subCategoryW = subCategoryW;
+        this.subCategory = subCategory;
         this.brand = brand;
         this.sellerId = sellerId;
+        this.batchId = batchId;
+        this.size= size;
     }
 }

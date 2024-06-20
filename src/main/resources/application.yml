@@ -53,6 +53,9 @@ hft:
     expiry-time: 60000000
   queue:
     sell-request-queue: sell-request-queue
+  document-path:
+    base-path: "/home/neosoft/Documents/HFT/documents/"
+    product-images: "product/images/"
 
 app:
   cors:

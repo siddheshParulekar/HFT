@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class HomePageServiceImpl implements IHomePageService {
         }else if (masterType.equals(Mastertype.CATEGORY)) {
             return Arrays.stream(Category.values()).map(category -> new MasterDTO(category.name(), String.valueOf(category.value()))).collect(Collectors.toList());
         } else if (masterType.equals(Mastertype.SUBCATEGORYM)) {
-             return Arrays.stream(SubCategoryM.values()).map(subCategoryM -> new MasterDTO(subCategoryM.name(), String.valueOf(subCategoryM.value()))).collect(Collectors.toList());
+             return Arrays.stream(SubCategory.values()).map(subCategory -> new MasterDTO(subCategory.name(), String.valueOf(subCategory.value()))).collect(Collectors.toList());
         } else if (masterType.equals(Mastertype.CONDITION)) {
             return Arrays.stream(Condition.values()).map(condition -> new MasterDTO(condition.name(), String.valueOf(condition.value()))).collect(Collectors.toList());
         }else if (masterType.equals(Mastertype.SUBCATEGORYW)) {
