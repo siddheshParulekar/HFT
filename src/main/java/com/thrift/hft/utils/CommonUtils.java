@@ -7,6 +7,12 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.servlet.http.Part;
+
+import java.io.IOException;
 
 import static com.thrift.hft.security.SecurityConstants.*;
 
@@ -39,5 +45,16 @@ public class CommonUtils {
     public static String getName(String firstName, String lastName) {
         return firstName + " " + lastName;
     }
+
+
+//    public MultipartFile convertPartToMultipartFile(Part part) throws IOException {
+//        return new CommonsMultipartFile(new org.springframework.mock.web.MockMultipartFile(
+//                part.getName(),
+//                part.getSubmittedFileName(),
+//                part.getContentType(),
+//                IOUtil.toByteArray(part.getInputStream())
+//        ));
+//    }
+
 }
 
