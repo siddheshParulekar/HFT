@@ -42,4 +42,5 @@ public class LoginController {
         loginService.logout(request);
         return ResponseEntityUtils.get(null, "Logout Successfully");
     }
+
 }

@@ -21,6 +21,13 @@ public class HomePageController {
     IHomePageService dashboardService;
 
 
+    @GetMapping("/wel")
+    @ApiOperation(value = "Auth - Access to all Users")
+    public String welcomePage(@RequestParam("token") String token) {
+        logger.info("DashboardController - Inside logPage method");
+        return "Login Page" + token;
+    }
+
 
     @GetMapping("/fetch-all-masters/{masterType}")
     @ApiOperation(value = "Auth - Access to all Users")

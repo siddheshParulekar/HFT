@@ -2,7 +2,6 @@ package com.thrift.hft.security;
 
 import com.thrift.hft.exceptions.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,6 @@ import java.util.Objects;
 
 import static com.thrift.hft.constants.ErrorMsgConstants.ERROR_UNABLE_TO_GET_TOKEN;
 import static com.thrift.hft.security.SecurityConstants.*;
-import static com.thrift.hft.security.SecurityConstants.FILTER_LOGIN_URL;
 
 @Component
 @Slf4j
@@ -74,9 +72,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     private Boolean skipAuth(String requestUri) {
-        if (requestUri.contains(FILTER_REGISTER_URL) || requestUri.contains("/hustleFreeThrift/v1/auth/login")
+        if (requestUri.contains(FILTER_REGISTER_URL) || requestUri.contains("/hustleFreeThrift/v1/auth/login") || requestUri.contains("/hustleFreeThrift/v1/auth/google")
               || requestUri.contains("/hustleFreeThrift/v2/api-docs") || requestUri.contains("swagger")  || requestUri.contains(FILTER_SWAGGER_URL) || requestUri.contains(FILTER_SWAGGER_API_DOCS_URL)
-                || requestUri.contains(FILTER_VALIDATE_OTP) || requestUri.startsWith("/hustleFreeThrift/v1/home-page/fetch-all-masters/")
+                || requestUri.contains(FILTER_VALIDATE_OTP) || requestUri.startsWith("/hustleFreeThrift/v1/home-page")
                 )
             return Boolean.TRUE;
         return Boolean.FALSE;
