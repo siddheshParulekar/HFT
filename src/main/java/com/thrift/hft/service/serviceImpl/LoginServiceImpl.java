@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -83,4 +82,5 @@ public class LoginServiceImpl implements ILoginService {
         }
         throw new UnAuthorizedException();
     }
+
 }

@@ -1,14 +1,20 @@
 package com.thrift.hft.service.serviceImpl;
 
 import com.thrift.hft.dto.UserDTO;
+import com.thrift.hft.entity.AccessToken;
 import com.thrift.hft.entity.User;
+import com.thrift.hft.enums.Role;
 import com.thrift.hft.exceptions.AlreadyExistsException;
 import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
+import com.thrift.hft.repository.AccessTokenRepository;
 import com.thrift.hft.repository.UserRepository;
+import com.thrift.hft.request.TokenRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
+import com.thrift.hft.response.LoginResponse;
 import com.thrift.hft.response.TokenResponse;
+import com.thrift.hft.security.JwtUtils;
 import com.thrift.hft.service.IUserService;
 import com.thrift.hft.utils.CommonUtils;
 import org.apache.logging.log4j.LogManager;
@@ -19,12 +25,18 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.thrift.hft.security.SecurityConstants.BEARER;
+
 @Service
 public class UserServiceImpl implements IUserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JwtUtils jwtUtils;
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
 
 
     @Override
@@ -65,5 +77,21 @@ public class UserServiceImpl implements IUserService {
         }
 
         return user.getUserDTO();
+    }
+
+    public LoginResponse processOAuthPostLog(String email,String name){
+    User user;
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        user = userOptional.orElseGet(() -> userRepository.save(User.builder()
+                .email(email)
+                .role(Role.USER)
+                .name(name)
+                .build()));
+
+        LoginResponse loginResponse = new LoginResponse(user.getUserDTO(), jwtUtils.generateToken(new TokenRequest(user.getId(),
+                user.getEmail(),user.getRole().name(),
+                user.getName())));
+        accessTokenRepository.save(new AccessToken(loginResponse.getToken().replace(BEARER, ""), user.getId()));
+        return loginResponse;
     }
 }
