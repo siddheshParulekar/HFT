@@ -34,14 +34,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         if (Boolean.TRUE.equals(skipAuth(request.getRequestURI()))) {
+            storeOriginalUrl(request);
             filterChain.doFilter(request, response);
             return;
         }
 
         final String requestTokenHeader = request.getHeader(AUTHORIZATION);
 
-        if (Objects.isNull(requestTokenHeader))
+        if (Objects.isNull(requestTokenHeader)){
+            storeOriginalUrl(request);
             throw new UnAuthorizedException();
+        }
 
         String email = null;
         String jwtToken;
@@ -63,11 +66,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            } else throw new UnAuthorizedException();
+            }  else throw new UnAuthorizedException();
         }
 
         filterChain.doFilter(request, response);
 
+    }
+
+
+    private void storeOriginalUrl(HttpServletRequest request) {
+        String originalUrl = request.getRequestURI();
+        if (request.getQueryString() != null) {
+            originalUrl += "?" + request.getQueryString();
+        }
+        request.getSession().setAttribute("redirect_url", originalUrl);
+        log.info("Stored original URL: {}", originalUrl);
     }
 
 

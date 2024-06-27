@@ -3,6 +3,7 @@ package com.thrift.hft.security;
 
 import com.thrift.hft.response.LoginResponse;
 import com.thrift.hft.service.serviceImpl.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,11 +31,15 @@ import static com.thrift.hft.security.SecurityConstants.*;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
     public static final String[] PUBLIC_URLS = {
             "/v1/user/register", "/v1/auth/login", "/v1/auth/google", "/v2/api-docs"
-            , "/v1/home-page/**"};
+            , "/v1/home-page/**","/swagger-ui/", "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v2/api-docs/**",
+            "/v3/**"};
 
     @Value("${custom.security.username}")
     private String username;
@@ -85,11 +90,22 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
                         String email = oauthUser.getAttribute("email");
                         String name = oauthUser.getAttribute("name");
                     LoginResponse loginResponse = userService.processOAuthPostLog(email, name);
+
+                    String redirectUrl = (String) request.getSession().getAttribute("redirect_url");
+                    if (redirectUrl == null) {
+                        redirectUrl = "http://localhost:4200/";
+                    }
+                    log.info("Redirecting to: {}", redirectUrl);
+                    response.sendRedirect(redirectUrl);
+
                     //TODO:Siddhesh need to think about this
                      //TODO: FE you can remove " + loginResponse.getToken()" this part as of now
-                    String redirectUrl = "http://localhost:4200/" + loginResponse.getToken();
+                   // String redirectUrl = "http://localhost:4200/" + loginResponse.getToken();
                     // Redirect to the home page
-                    response.sendRedirect(redirectUrl);
+
+                }).failureHandler((request, response, exception) -> {
+                    log.error("OAuth2 Login Failure: ", exception);
+                    response.sendRedirect("/login?error");
                 });
 
 
