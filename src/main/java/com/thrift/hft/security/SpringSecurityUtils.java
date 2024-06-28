@@ -90,19 +90,21 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
                         String email = oauthUser.getAttribute("email");
                         String name = oauthUser.getAttribute("name");
                     LoginResponse loginResponse = userService.processOAuthPostLog(email, name);
-
+/**
                     String redirectUrl = (String) request.getSession().getAttribute("redirect_url");
                     if (redirectUrl == null) {
                         redirectUrl = "http://localhost:4200/";
                     }
                     log.info("Redirecting to: {}", redirectUrl);
                     response.sendRedirect(redirectUrl);
+ **/
 
-                    //TODO:Siddhesh need to think about this
-                     //TODO: FE you can remove " + loginResponse.getToken()" this part as of now
-                   // String redirectUrl = "http://localhost:4200/" + loginResponse.getToken();
-                    // Redirect to the home page
-
+                   // TODO:Siddhesh need to think about this
+                  /**   FE you can remove " + loginResponse.getToken()" this part as of now OR
+                            accept the token through queryParam and pass that token further
+                   **/
+                    String redirectUrl = "http://localhost:4200/" + loginResponse.getToken();
+                    response.sendRedirect(redirectUrl);
                 }).failureHandler((request, response, exception) -> {
                     log.error("OAuth2 Login Failure: ", exception);
                     response.sendRedirect("/login?error");
