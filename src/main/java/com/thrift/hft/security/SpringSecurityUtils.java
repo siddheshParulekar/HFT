@@ -78,7 +78,6 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
         });
 
         httpSecurity
-                .cors().and().csrf().disable()
                 .headers().addHeaderWriter((request, response) -> response.setHeader(ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)).and().csrf().disable().authorizeRequests()
                 .antMatchers(PUBLIC_URLS).permitAll()
                 .antMatchers(URL_SWAGGER_UI, URL_API_DOCS_ALL, URL_SWAGGER_RESOURCES)
@@ -116,18 +115,6 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
         httpSecurity.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
 
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList(origins.split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        corsConfig.addAllowedHeader("*");
-        source.registerCorsConfiguration("/**", corsConfig);
-        return source;
     }
 
     //Below Method is used for applying security on swagger urls
