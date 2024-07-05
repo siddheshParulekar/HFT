@@ -1,7 +1,9 @@
 package com.thrift.hft.entity;
 
 import com.thrift.hft.audit.Auditable;
+import com.thrift.hft.dto.ProductDTO;
 import com.thrift.hft.enums.*;
+import com.thrift.hft.utils.CommonUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 @Data
@@ -38,7 +41,7 @@ public class Product extends Auditable<String> {
     @Enumerated(EnumType.STRING)
     ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
     @Enumerated(EnumType.STRING)
-    Size size;
+    Size size  = Size.FREE_SIZE;
 
 
 
@@ -52,5 +55,9 @@ public class Product extends Auditable<String> {
         this.sellerId = sellerId;
         this.batchId = batchId;
         this.size= size;
+    }
+
+    public ProductDTO getProductDTO() throws IOException {
+        return  new ProductDTO(id,productName,prize,CommonUtils.getEnumMap(condition.name(),condition.value()),CommonUtils.getEnumMap(category.name(),category.value()) ,CommonUtils.getEnumMap(subCategory.name(),subCategory.value()),CommonUtils.getEnumMap(brand.name(),brand.value()),sellerId,batchId,CommonUtils.getEnumMap(prodStatus.name(),prodStatus.value()),CommonUtils.getEnumMap(approvalStatus.name(),approvalStatus.value()) ,CommonUtils.getEnumMap(size.name(),size.value()), CommonUtils.getProductImages(id));
     }
 }

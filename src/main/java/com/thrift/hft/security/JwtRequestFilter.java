@@ -87,7 +87,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private Boolean skipAuth(String requestUri) {
         if (requestUri.contains(FILTER_REGISTER_URL) || requestUri.contains("/hustleFreeThrift/v1/auth/login") || requestUri.contains("/hustleFreeThrift/v1/auth/google")
               || requestUri.contains("/hustleFreeThrift/v2/api-docs") || requestUri.contains("swagger")  || requestUri.contains(FILTER_SWAGGER_URL) || requestUri.contains(FILTER_SWAGGER_API_DOCS_URL)
-                || requestUri.contains(FILTER_VALIDATE_OTP) || requestUri.startsWith("/hustleFreeThrift/v1/home-page")
+                || requestUri.contains(FILTER_VALIDATE_OTP) || requestUri.startsWith("/hustleFreeThrift/v1/home-page") ||requestUri.startsWith("/hustleFreeThrift/v1/product/get-products")
                 )
             return Boolean.TRUE;
         return Boolean.FALSE;

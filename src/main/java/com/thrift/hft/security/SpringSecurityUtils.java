@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +39,7 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
     public static final String[] PUBLIC_URLS = {
             "/v1/user/register", "/v1/auth/login", "/v1/auth/google", "/v2/api-docs"
             , "/v1/home-page/**","/swagger-ui/", "/swagger-resources/**",
-            "/swagger-ui/**",
+            "/swagger-ui/**","/v1/product/get-products",
             "/v2/api-docs/**",
             "/v3/**"};
 
