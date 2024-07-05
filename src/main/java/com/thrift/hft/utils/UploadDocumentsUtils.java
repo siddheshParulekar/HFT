@@ -3,6 +3,7 @@ package com.thrift.hft.utils;
 import com.thrift.hft.entity.UploadDocument;
 import com.thrift.hft.exceptions.FileException;
 import com.thrift.hft.exceptions.NotFoundException;
+import com.thrift.hft.exceptions.UnsupportedDocumentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -78,7 +79,9 @@ public class UploadDocumentsUtils {
         if (file == null) {
             throw new NotFoundException("ERROR_MISSING_FILE");
         }
-
+        if (!(file.getContentType().equals("image/jpeg")
+                || file.getContentType().equals("image/png")))
+            throw new UnsupportedDocumentException("File type must be jpeg/png only");
         try {
             String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
             int dotIndex = fileName.lastIndexOf(".");

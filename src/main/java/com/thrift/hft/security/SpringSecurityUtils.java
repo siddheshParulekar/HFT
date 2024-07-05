@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +39,7 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
     public static final String[] PUBLIC_URLS = {
             "/v1/user/register", "/v1/auth/login", "/v1/auth/google", "/v2/api-docs"
             , "/v1/home-page/**","/swagger-ui/", "/swagger-resources/**",
-            "/swagger-ui/**",
+            "/swagger-ui/**","/v1/product/get-products",
             "/v2/api-docs/**",
             "/v3/**"};
 
@@ -76,6 +78,7 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
         });
 
         httpSecurity
+                .cors().and().csrf().disable()
                 .headers().addHeaderWriter((request, response) -> response.setHeader(ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)).and().csrf().disable().authorizeRequests()
                 .antMatchers(PUBLIC_URLS).permitAll()
                 .antMatchers(URL_SWAGGER_UI, URL_API_DOCS_ALL, URL_SWAGGER_RESOURCES)
@@ -113,6 +116,18 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
 
         httpSecurity.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
 
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedOrigins(Arrays.asList(origins.split(",")));
+        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        corsConfig.addAllowedHeader("*");
+        source.registerCorsConfiguration("/**", corsConfig);
+        return source;
     }
 
     //Below Method is used for applying security on swagger urls

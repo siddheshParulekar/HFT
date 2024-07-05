@@ -3,6 +3,8 @@ package com.thrift.hft.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thrift.hft.dto.ResponseDTO;
+import com.thrift.hft.enums.*;
+import com.thrift.hft.request.GetAllProductRequest;
 import com.thrift.hft.request.ProductRequest;
 import com.thrift.hft.request.SellRequest;
 import com.thrift.hft.service.IProductService;
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,4 +72,19 @@ public class ProductController {
         return ResponseEntityUtils.get(productService.createSellRequest(productRequestList, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Selling request created successfully");
     }
 
+    @GetMapping(value = "/get-products")
+    @ApiOperation(value = "Auth - Access to all Users")
+    public ResponseEntity<ResponseDTO> getAllProducts(Pageable pageable,
+                                                      @RequestParam(required = false, name = "category") Category category,
+                                                      @RequestParam(required = false, name = "subCategory") SubCategory subCategory,
+                                                      @RequestParam(required = false, name = "brand") Brand brand,
+                                                      @RequestParam(required = false, name = "prodStatus") ProdStatus prodStatus,
+                                                      @RequestParam(required = false, name = "approvalStatus") ApprovalStatus approvalStatus,
+                                                      @RequestParam(required = false, name = "size") Size size,
+                                                      @RequestParam(required = false,name = "condition") Condition condition) throws IOException {
+        logger.info("ProductController - Inside getAllProducts method");
+
+        return ResponseEntityUtils.get(productService.getAllProduct(new GetAllProductRequest(pageable,category,subCategory,brand,prodStatus,approvalStatus,size,condition)),"Products fetched ");
+
+    }
 }
