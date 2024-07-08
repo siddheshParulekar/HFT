@@ -6,6 +6,7 @@ import com.thrift.hft.entity.ProductImage;
 import com.thrift.hft.entity.Product;
 import com.thrift.hft.entity.User;
 import com.thrift.hft.exceptions.InvalidException;
+import com.thrift.hft.exceptions.NotFoundException;
 import com.thrift.hft.filter.FilterBuilder;
 import com.thrift.hft.properties.DocumentPath;
 import com.thrift.hft.queue.JMSProducer;
@@ -89,6 +90,13 @@ public class ProductServiceImpl implements IProductService {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Override
+    public ProductDTO viewProduct(Long pid) throws IOException {
+        logger.info("ProductServiceImpl - Inside getAllProduct method");
+        Product product = productRepository.findById(pid).orElseThrow(() -> new NotFoundException("Product not found"));
+        return product.getProductDTO();
     }
 
 

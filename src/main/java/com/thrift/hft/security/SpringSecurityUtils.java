@@ -39,7 +39,7 @@ public class SpringSecurityUtils extends WebSecurityConfigurerAdapter {
     public static final String[] PUBLIC_URLS = {
             "/v1/user/register", "/v1/auth/login", "/v1/auth/google", "/v2/api-docs"
             , "/v1/home-page/**","/swagger-ui/", "/swagger-resources/**",
-            "/swagger-ui/**","/v1/product/get-products",
+            "/swagger-ui/**","/v1/product/**",
             "/v2/api-docs/**",
             "/v3/**"};
 
