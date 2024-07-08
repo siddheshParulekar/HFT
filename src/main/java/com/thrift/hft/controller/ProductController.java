@@ -87,4 +87,12 @@ public class ProductController {
         return ResponseEntityUtils.get(productService.getAllProduct(new GetAllProductRequest(pageable,category,subCategory,brand,prodStatus,approvalStatus,size,condition)),"Products fetched ");
 
     }
+
+    @GetMapping("/view-product/{pid}")
+    @ApiOperation(value = "Auth - Access to all Users")
+    public ResponseEntity<ResponseDTO> viewProduct(@PathVariable("pid") Long pid) throws IOException {
+        logger.info("ProductController - Inside viewProduct method");
+
+        return ResponseEntityUtils.get(productService.viewProduct(pid),"Product fetched ");
+    }
 }

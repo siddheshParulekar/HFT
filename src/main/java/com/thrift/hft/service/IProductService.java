@@ -15,4 +15,6 @@ public interface IProductService {
     Long createSellRequest(List<ProductRequest> request, TokenResponse tokenResponse);
 
     Page<ProductDTO> getAllProduct(GetAllProductRequest getAllProductRequest) throws IOException;
+
+    ProductDTO viewProduct(Long pid) throws IOException;
 }
