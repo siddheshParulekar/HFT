@@ -1,6 +1,7 @@
 package com.thrift.hft.controller;
 
 import com.thrift.hft.dto.ResponseDTO;
+import com.thrift.hft.request.UpdateAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.service.IUserService;
@@ -35,9 +36,16 @@ public class UserController {
     }
 
     @PutMapping("update-address/{userId}")
-    public ResponseEntity<ResponseDTO> updateAddress(@PathVariable("userId") Long userId, @RequestBody @Valid UpdateUserRequest updateUserRequest,
-                                                     HttpServletRequest request) {
+    public ResponseEntity<ResponseDTO> updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UpdateUserRequest updateUserRequest,
+                                                  HttpServletRequest request) {
         logger.info("UserController- inside registerUser method");
         return ResponseEntityUtils.get(userService.updateUser(userId,updateUserRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), MSG_USER_ADDED);
+    }
+
+    @PostMapping("/add-address")
+    public ResponseEntity<ResponseDTO> updateAddress(@RequestBody @Valid UpdateAddressRequest updateAddressRequest,
+                                                     HttpServletRequest request) {
+        logger.info("UserController- inside registerUser method");
+        return ResponseEntityUtils.get(userService.updateAddress(updateAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Address updated successfully");
     }
 }

@@ -2,14 +2,17 @@ package com.thrift.hft.service.serviceImpl;
 
 import com.thrift.hft.dto.UserDTO;
 import com.thrift.hft.entity.AccessToken;
+import com.thrift.hft.entity.Address;
 import com.thrift.hft.entity.User;
 import com.thrift.hft.enums.Role;
 import com.thrift.hft.exceptions.AlreadyExistsException;
 import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
 import com.thrift.hft.repository.AccessTokenRepository;
+import com.thrift.hft.repository.AddressRepository;
 import com.thrift.hft.repository.UserRepository;
 import com.thrift.hft.request.TokenRequest;
+import com.thrift.hft.request.UpdateAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.response.LoginResponse;
@@ -37,6 +40,9 @@ public class UserServiceImpl implements IUserService {
     JwtUtils jwtUtils;
     @Autowired
     AccessTokenRepository accessTokenRepository;
+
+    @Autowired
+    AddressRepository addressRepository;
 
 
     @Override
@@ -79,7 +85,30 @@ public class UserServiceImpl implements IUserService {
         return user.getUserDTO();
     }
 
+    @Override
+    public UserDTO updateAddress(UpdateAddressRequest updateAddressRequest, TokenResponse tokenResponse) {
+        logger.info("UserServiceImpl - Inside updateAddress method");
+        User user = userRepository.findById(tokenResponse.getUserId()).orElseThrow(()->new NotFoundException("User Not Found with this userId"));
+
+        addressRepository.deleteByAddressTypeAndUserId(updateAddressRequest.getAddressType(), tokenResponse.getUserId());
+
+        addressRepository.save(Address.builder().houseNumber(updateAddressRequest.getHouseNumber())
+                .streetAddress(updateAddressRequest.getStreetAddress())
+                        .locality(updateAddressRequest.getLocality())
+                        .landmark(updateAddressRequest.getLandmark())
+                        .city(updateAddressRequest.getCity())
+                        .state(updateAddressRequest.getState())
+                        .pinCode(updateAddressRequest.getPinCode())
+                        .country(updateAddressRequest.getCountry())
+                        .addressType(updateAddressRequest.getAddressType())
+                        .userId(tokenResponse.getUserId()).build()
+                );
+
+        return user.getUserDTO();
+    }
+
     public LoginResponse processOAuthPostLog(String email,String name){
+        logger.info("UserServiceImpl - Inside processOAuthPostLog method");
     User user;
         Optional<User> userOptional = userRepository.findByEmail(email);
         user = userOptional.orElseGet(() -> userRepository.save(User.builder()
