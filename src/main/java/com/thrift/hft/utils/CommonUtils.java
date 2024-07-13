@@ -1,8 +1,11 @@
 package com.thrift.hft.utils;
 
+import com.thrift.hft.dto.AddressDTO;
 import com.thrift.hft.dto.ProdImageDTO;
+import com.thrift.hft.entity.Address;
 import com.thrift.hft.entity.ProductImage;
 import com.thrift.hft.properties.JwtProperties;
+import com.thrift.hft.repository.AddressRepository;
 import com.thrift.hft.repository.ProdImageRepository;
 import com.thrift.hft.response.TokenResponse;
 import io.jsonwebtoken.Claims;
@@ -32,12 +35,15 @@ public class CommonUtils {
 
     private static JwtProperties properties;
     private static ProdImageRepository prodImageRepository;
+    private static AddressRepository addressRepository;
 
     @Autowired
     public CommonUtils(JwtProperties jwtProperties,
-                       ProdImageRepository prodImageRepository){
+                       ProdImageRepository prodImageRepository,
+                       AddressRepository addressRepository){
         CommonUtils.properties = jwtProperties;
         CommonUtils.prodImageRepository = prodImageRepository;
+        CommonUtils.addressRepository= addressRepository;
     }
 
     public static String encodePassword(String password) {
@@ -74,6 +80,20 @@ public class CommonUtils {
         }
 
         return prodImageList;
+
+    }
+
+    public static List<AddressDTO> getUserAddress(Long userId){
+        log.info("CommonUtils - Inside getUserAddress method ");
+
+        List<AddressDTO> addressDTOS= new ArrayList<>();
+        List<Address> addressList = addressRepository.findByUserId(userId);
+
+        if(!addressList.isEmpty()){
+            addressList.forEach(a-> addressDTOS.add(a.getAddressDTO()));
+        }
+
+        return addressDTOS;
 
     }
 

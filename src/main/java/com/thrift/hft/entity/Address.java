@@ -2,6 +2,7 @@ package com.thrift.hft.entity;
 
 
 import com.thrift.hft.audit.Auditable;
+import com.thrift.hft.dto.AddressDTO;
 import com.thrift.hft.enums.AddressType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -43,5 +44,9 @@ public class Address extends Auditable<String> {
         this.locality = locality;
         this.streetAddress = streetAddress;
         this.houseNumber = houseNumber;
+    }
+
+    public AddressDTO getAddressDTO(){
+        return new AddressDTO(houseNumber,streetAddress,locality,landmark,city,state,pinCode,country,addressType,userId);
     }
 }
