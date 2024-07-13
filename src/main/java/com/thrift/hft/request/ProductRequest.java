@@ -1,6 +1,5 @@
 package com.thrift.hft.request;
 
-import com.thrift.hft.enums.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +22,5 @@ public class ProductRequest {
     String subCategory;
     String brand;
     String size;
-    MultipartFile[] images;
+    MultipartFile[] files;
 }
