@@ -4,6 +4,9 @@ import com.thrift.hft.dto.AddressDTO;
 import com.thrift.hft.dto.ProdImageDTO;
 import com.thrift.hft.entity.Address;
 import com.thrift.hft.entity.ProductImage;
+import com.thrift.hft.enums.Brand;
+import com.thrift.hft.enums.Condition;
+import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.properties.JwtProperties;
 import com.thrift.hft.repository.AddressRepository;
 import com.thrift.hft.repository.ProdImageRepository;
@@ -103,6 +106,37 @@ public class CommonUtils {
         map.put("name",name);
         map.put("value",value);
         return map;
+    }
+
+    public static Condition getCondition(String condition) {
+        if (condition == null)
+            throw new InvalidException("Condition cannot be null");
+        else if (condition.equalsIgnoreCase(Condition.GOOD.name()))
+            return Condition.GOOD;
+        else if (condition.equalsIgnoreCase(Condition.LIKE_NEW.name()))
+            return Condition.LIKE_NEW;
+        else if (condition.equalsIgnoreCase(Condition.NEW.name()))
+            return Condition.NEW;
+        else if (condition.equalsIgnoreCase(Condition.POOR.name()))
+            return Condition.POOR;
+        else
+            throw new InvalidException("Invalid condition type");
+    }
+
+    public static Brand getBrand(String brand) {
+        if (brand == null)
+            throw new InvalidException("Brand type cannot be null");
+          final Map<String, Brand> brandMap = new HashMap<>();
+        for (Brand brands : Brand.values()) {
+            brandMap.put(brands.name().toLowerCase(), brands);
+        }
+        String normalizedBrand = brand.trim().toLowerCase();
+
+        Brand resolvedBrand = brandMap.get(normalizedBrand);
+        if (resolvedBrand == null) {
+            throw new IllegalArgumentException("Invalid brand type");
+        }
+        return resolvedBrand;
     }
 
 }

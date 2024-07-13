@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface IProductService {
 
-    Long createSellRequest(List<ProductRequest> request, TokenResponse tokenResponse);
-
     Page<ProductDTO> getAllProduct(GetAllProductRequest getAllProductRequest) throws IOException;
 
     ProductDTO viewProduct(Long pid) throws IOException;
+
+    Long createSellRequest(ProductRequest request, TokenResponse tokenResponse);
 }

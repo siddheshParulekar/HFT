@@ -17,14 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,38 +42,21 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
-
-    @PostMapping(value = "/sell-request",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/create-manual-match-request")
     @ApiOperation(value = "Auth - Access to all Users")
-    public ResponseEntity<ResponseDTO> sellRequest(HttpServletRequest request) throws IOException, ServletException {
-        logger.info("ProductController - Inside sellRequest method");
-        SellRequest productRequest = new ObjectMapper().readValue(request.getParameter("productRequest"),SellRequest.class);
-        int i = 0;
-        List<Part> parts = new ArrayList<>();
-        for (Part part : request.getParts()) {
-            if (part.getName().equals("productRequest")) {
-                continue;
-            }
-            if (part.getName().equals("productRequests[" + i + "]")) {
-                parts.add(part);
-            } else {
-                // image set
-                if (!parts.isEmpty()) {
-                    productRequest.getProductRequests().get(i).setImages(new ArrayList<>(parts));
-                    parts.clear();  // Clear the parts list for the next set of images
-                }
-                i++;
-                parts.add(part);  // Add the current part to the new list
-            }
-        }
-// Set images for the last product request
-        if (!parts.isEmpty()) {
-            productRequest.getProductRequests().get(i).setImages(new ArrayList<>(parts));
-        }
-        List<ProductRequest> productRequestList =productRequest.getProductRequests();
-
-        return ResponseEntityUtils.get(productService.createSellRequest(productRequestList, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Selling request created successfully");
+    public ResponseEntity<ResponseDTO> createPaymentAccountStatementRequest(@RequestPart(value = "amount", required = false) String amount,
+                                                                            @RequestPart(value = "description", required = false) String description,
+                                                                            @RequestPart(value = "condition", required = false) String condition,
+                                                                            @RequestPart(value = "category", required = false) String category,
+                                                                            @RequestPart(value = "subCategory", required = false) String subCategory,
+                                                                            @RequestPart(value = "brand", required = false) String brand,
+                                                                            @RequestPart(value = "size", required = false) String size,
+                                                                            @RequestPart(name = "files", required = false) MultipartFile[] files,
+                                                                            HttpServletRequest request
+                                                                            ){
+        return ResponseEntityUtils.get(productService.createSellRequest(new ProductRequest(description,new BigDecimal(amount),condition,category,subCategory,brand,size,files),CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Product added successfully");
     }
+
 
     @GetMapping(value = "/get-products")
     @ApiOperation(value = "Auth - Access to all Users")

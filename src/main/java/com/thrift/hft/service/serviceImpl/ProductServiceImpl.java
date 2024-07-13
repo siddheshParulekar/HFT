@@ -28,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Part;
 import java.io.IOException;
@@ -58,14 +59,14 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProdImageRepository prodImageRepository;
 
-    @Override
-    public Long createSellRequest(List<ProductRequest> productRequestList, TokenResponse tokenResponse) {
-        logger.info("ProductServiceImpl - Inside createSellRequest");
-        BatchDetails batchDetails = createBatchDetails(BigDecimal.valueOf(productRequestList.size()), tokenResponse.getUserId());
-        saveProduct(productRequestList, batchDetails.getId(), tokenResponse);
-        // jmsProducer.createSellRequest(new SendSellRequestInQueue(productRequestList,tokenResponse));
-        return batchDetails.getId();
-    }
+//    @Override
+//    public Long createSellRequest(List<ProductRequest> productRequestList, TokenResponse tokenResponse) {
+//        logger.info("ProductServiceImpl - Inside createSellRequest");
+//        BatchDetails batchDetails = createBatchDetails(BigDecimal.valueOf(productRequestList.size()), tokenResponse.getUserId());
+//        saveProduct(productRequestList, batchDetails.getId(), tokenResponse);
+//        // jmsProducer.createSellRequest(new SendSellRequestInQueue(productRequestList,tokenResponse));
+//        return batchDetails.getId();
+//    }
 
 
     @Override
@@ -99,6 +100,12 @@ public class ProductServiceImpl implements IProductService {
         return product.getProductDTO();
     }
 
+    @Override
+    public Long createSellRequest(ProductRequest request, TokenResponse tokenResponse) {
+
+        return 0L;
+    }
+
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public BatchDetails createBatchDetails(BigDecimal numberOfArticle, Long userId) {
@@ -116,8 +123,8 @@ public class ProductServiceImpl implements IProductService {
             Product product = productRepository.save(new Product(pr.getProductName(), pr.getPrize(), pr.getCondition(),
                     pr.getCategory(), pr.getSubCategory(),  pr.getBrand(), tokenResponse.getUserId(), batchId,pr.getSize()));
 
-            List<Part> images = pr.getImages();
-            for (Part file : images) {
+//            List<Part> images = pr.getImages();
+            for (MultipartFile file : pr.getImages()) {
                 String filePath = uploadDocumentsUtils.uploadDocuments(file, documentPath.getProductImages(), product.getBrand().name());
                 String[] parts = filePath.split("/");
                 String fileName = parts[parts.length - 1];
