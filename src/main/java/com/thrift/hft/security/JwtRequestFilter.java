@@ -80,7 +80,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             originalUrl += "?" + request.getQueryString();
         }
         request.getSession().setAttribute("redirect_url", originalUrl);
-        log.info("Stored original URL: {}", originalUrl);
     }
 
 

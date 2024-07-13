@@ -104,8 +104,8 @@ public class ProductServiceImpl implements IProductService {
     public BatchDetails createBatchDetails(BigDecimal numberOfArticle, Long userId) {
         logger.info("ProductServiceImpl - Inside createBatchDetails");
         User user = userRepository.findById(userId).get();
-        if (user.getMobileNumber() == null|| user.getAddress() == null)
-                throw new InvalidException("Please fill all user details ");
+//        if (user.getMobileNumber() == null|| user.getAddress() == null)
+//                throw new InvalidException("Please fill all user details ");
         return batchDetailsRepository.save(new BatchDetails(numberOfArticle, userId, user.getMobileNumber()));
     }
 
