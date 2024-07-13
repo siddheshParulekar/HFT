@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -24,7 +25,7 @@ public class Product extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String productName;
+    String description;
     BigDecimal prize;
     @Enumerated(EnumType.STRING)
     Condition condition;
@@ -35,7 +36,6 @@ public class Product extends Auditable<String> {
     @Enumerated(EnumType.STRING)
     Brand brand;
     Long sellerId;
-    Long batchId;
     @Enumerated(EnumType.STRING)
     ProdStatus prodStatus = ProdStatus.IN_STOCK;
     @Enumerated(EnumType.STRING)
@@ -45,19 +45,18 @@ public class Product extends Auditable<String> {
 
 
 
-    public Product(String productName, BigDecimal prize, Condition condition, Category category, SubCategory subCategory, Brand brand, Long sellerId, Long batchId, Size size) {
-        this.productName = productName;
+    public Product(String description, BigDecimal prize, Condition condition, Category category, SubCategory subCategory, Brand brand, Long sellerId, Size size) {
+        this.description = description;
         this.prize = prize;
         this.condition = condition;
         this.category = category;
         this.subCategory = subCategory;
         this.brand = brand;
         this.sellerId = sellerId;
-        this.batchId = batchId;
         this.size= size;
     }
 
     public ProductDTO getProductDTO() throws IOException {
-        return  new ProductDTO(id,productName,prize,CommonUtils.getEnumMap(condition.name(),condition.value()),CommonUtils.getEnumMap(category.name(),category.value()) ,CommonUtils.getEnumMap(subCategory.name(),subCategory.value()),CommonUtils.getEnumMap(brand.name(),brand.value()),sellerId,batchId,CommonUtils.getEnumMap(prodStatus.name(),prodStatus.value()),CommonUtils.getEnumMap(approvalStatus.name(),approvalStatus.value()) ,CommonUtils.getEnumMap(size.name(),size.value()), CommonUtils.getProductImages(id));
+        return  new ProductDTO(id, description,prize,CommonUtils.getEnumMap(condition.name(),condition.value()),CommonUtils.getEnumMap(category.name(),category.value()) ,CommonUtils.getEnumMap(subCategory.name(),subCategory.value()),CommonUtils.getEnumMap(brand.name(),brand.value()),sellerId,CommonUtils.getEnumMap(prodStatus.name(),prodStatus.value()),CommonUtils.getEnumMap(approvalStatus.name(),approvalStatus.value()) ,CommonUtils.getEnumMap(size.name(),size.value()), CommonUtils.getProductImages(id));
     }
 }

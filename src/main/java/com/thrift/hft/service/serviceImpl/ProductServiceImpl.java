@@ -18,8 +18,8 @@ import com.thrift.hft.request.GetAllProductRequest;
 import com.thrift.hft.request.ProductRequest;
 import com.thrift.hft.response.TokenResponse;
 import com.thrift.hft.service.IProductService;
+import com.thrift.hft.utils.CommonUtils;
 import com.thrift.hft.utils.UploadDocumentsUtils;
-import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.Part;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -58,14 +58,14 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProdImageRepository prodImageRepository;
 
-    @Override
-    public Long createSellRequest(List<ProductRequest> productRequestList, TokenResponse tokenResponse) {
-        logger.info("ProductServiceImpl - Inside createSellRequest");
-        BatchDetails batchDetails = createBatchDetails(BigDecimal.valueOf(productRequestList.size()), tokenResponse.getUserId());
-        saveProduct(productRequestList, batchDetails.getId(), tokenResponse);
-        // jmsProducer.createSellRequest(new SendSellRequestInQueue(productRequestList,tokenResponse));
-        return batchDetails.getId();
-    }
+//    @Override
+//    public Long createSellRequest(List<ProductRequest> productRequestList, TokenResponse tokenResponse) {
+//        logger.info("ProductServiceImpl - Inside createSellRequest");
+//        BatchDetails batchDetails = createBatchDetails(BigDecimal.valueOf(productRequestList.size()), tokenResponse.getUserId());
+//        saveProduct(productRequestList, batchDetails.getId(), tokenResponse);
+//        // jmsProducer.createSellRequest(new SendSellRequestInQueue(productRequestList,tokenResponse));
+//        return batchDetails.getId();
+//    }
 
 
     @Override
@@ -99,6 +99,27 @@ public class ProductServiceImpl implements IProductService {
         return product.getProductDTO();
     }
 
+    @Override
+    public ProductDTO createSellRequest(ProductRequest pr, TokenResponse tokenResponse) throws IOException {
+        logger.info("ProductServiceImpl - Inside createSellRequest method");
+        if (pr.getFiles() == null){
+            throw new InvalidException("Please upload two images for the product");
+        }
+        Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
+               CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize())));
+
+
+            for (MultipartFile file : pr.getFiles())
+                if (!file.isEmpty()) {
+                    String filePath = uploadDocumentsUtils.uploadDocuments(file, documentPath.getProductImages(), product.getBrand().name());
+                    String[] parts = filePath.split("/");
+                    String fileName = parts[parts.length - 1];
+                    prodImageRepository.save(new ProductImage(filePath, fileName, product));
+                }
+
+        return product.getProductDTO();
+    }
+
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public BatchDetails createBatchDetails(BigDecimal numberOfArticle, Long userId) {
@@ -109,22 +130,22 @@ public class ProductServiceImpl implements IProductService {
         return batchDetailsRepository.save(new BatchDetails(numberOfArticle, userId, user.getMobileNumber()));
     }
 
-    public void saveProduct(List<ProductRequest> productRequestList, Long batchId, TokenResponse tokenResponse) {
-        logger.info("ProductServiceImpl - Inside saveProduct");
-
-        for (ProductRequest pr : productRequestList) {
-            Product product = productRepository.save(new Product(pr.getProductName(), pr.getPrize(), pr.getCondition(),
-                    pr.getCategory(), pr.getSubCategory(),  pr.getBrand(), tokenResponse.getUserId(), batchId,pr.getSize()));
-
-            List<Part> images = pr.getImages();
-            for (Part file : images) {
-                String filePath = uploadDocumentsUtils.uploadDocuments(file, documentPath.getProductImages(), product.getBrand().name());
-                String[] parts = filePath.split("/");
-                String fileName = parts[parts.length - 1];
-                prodImageRepository.save(new ProductImage(filePath, fileName, product));
-            }
-        }
-    }
+//    public void saveProduct(List<ProductRequest> productRequestList, Long batchId, TokenResponse tokenResponse) {
+//        logger.info("ProductServiceImpl - Inside saveProduct");
+//
+//        for (ProductRequest pr : productRequestList) {
+//            Product product = productRepository.save(new Product(pr.getProductName(), pr.getPrize(), pr.getCondition(),
+//                    pr.getCategory(), pr.getSubCategory(),  pr.getBrand(), tokenResponse.getUserId(), batchId,pr.getSize()));
+//
+////            List<Part> images = pr.getImages();
+//            for (MultipartFile file : pr.getFiles()) {
+//                String filePath = uploadDocumentsUtils.uploadDocuments(file, documentPath.getProductImages(), product.getBrand().name());
+//                String[] parts = filePath.split("/");
+//                String fileName = parts[parts.length - 1];
+//                prodImageRepository.save(new ProductImage(filePath, fileName, product));
+//            }
+//        }
+//    }
 
 
 }
