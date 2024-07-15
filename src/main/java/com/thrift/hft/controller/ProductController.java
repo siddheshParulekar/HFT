@@ -33,13 +33,13 @@ public class ProductController {
 
     @PostMapping("/sell-request")
     @ApiOperation(value = "Auth - Access to all Users")
-    public ResponseEntity<ResponseDTO> createSellRequest(@RequestPart(value = "amount") String amount,
-                                                                            @RequestPart(value = "description") String description,
-                                                                            @RequestPart(value = "condition") String condition,
-                                                                            @RequestPart(value = "category") String category,
-                                                                            @RequestPart(value = "subCategory") String subCategory,
-                                                                            @RequestPart(value = "brand") String brand,
-                                                                            @RequestPart(value = "size") String size,
+    public ResponseEntity<ResponseDTO> createSellRequest(@RequestPart(name = "amount") String amount,
+                                                                            @RequestPart(name = "description") String description,
+                                                                            @RequestPart(name = "condition") String condition,
+                                                                            @RequestPart(name = "category") String category,
+                                                                            @RequestPart(name = "subCategory") String subCategory,
+                                                                            @RequestPart(name = "brand") String brand,
+                                                                            @RequestPart(name = "size") String size,
                                                                             @RequestPart(name = "files") MultipartFile[] files,
                                                                             HttpServletRequest request
                                                                             ) throws IOException {
