@@ -50,9 +50,6 @@ public class ProductServiceImpl implements IProductService {
     UserRepository userRepository;
 
     @Autowired
-    JMSProducer jmsProducer;
-
-    @Autowired
     ProductRepository productRepository;
     @Autowired
     UploadDocumentsUtils uploadDocumentsUtils;
@@ -61,15 +58,6 @@ public class ProductServiceImpl implements IProductService {
     private DocumentPath documentPath;
     @Autowired
     private ProdImageRepository prodImageRepository;
-
-//    @Override
-//    public Long createSellRequest(List<ProductRequest> productRequestList, TokenResponse tokenResponse) {
-//        logger.info("ProductServiceImpl - Inside createSellRequest");
-//        BatchDetails batchDetails = createBatchDetails(BigDecimal.valueOf(productRequestList.size()), tokenResponse.getUserId());
-//        saveProduct(productRequestList, batchDetails.getId(), tokenResponse);
-//        // jmsProducer.createSellRequest(new SendSellRequestInQueue(productRequestList,tokenResponse));
-//        return batchDetails.getId();
-//    }
 
 
     @Override
@@ -107,14 +95,15 @@ public class ProductServiceImpl implements IProductService {
     public ProductDTO createSellRequest(ProductRequest pr, TokenResponse tokenResponse) throws IOException {
         logger.info("ProductServiceImpl - Inside createSellRequest method");
         if (pr.getFiles() == null){
-            throw new InvalidException("Please upload two images for the product");
+            throw new InvalidException("Please upload at least two images for the product");
         }
+        if (pr.getFiles().length>4)
+            throw new InvalidException("You can upload at most four images per  article");
 
         for (MultipartFile file: pr.getFiles()){
-            if (checkForDuplicate(file))
+            if (checkForDuplicate(file,tokenResponse.getUserId()))
                 throw new AlreadyExistsException("Article with same image already exists");
         }
-
 
         Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
                CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize())));
@@ -130,10 +119,10 @@ public class ProductServiceImpl implements IProductService {
 
         return product.getProductDTO();
     }
-    public boolean checkForDuplicate(MultipartFile file) throws IOException {
+    public boolean checkForDuplicate(MultipartFile file,Long userId) throws IOException {
         String uploadedImageHash = computeHash(file);
 
-        List<ProductImage> imageList = prodImageRepository.findAll();
+        List<ProductImage> imageList = prodImageRepository.findBySellerId(userId);
         for (ProductImage productImage : imageList) {
             byte[] fileBytes = Files.readAllBytes(Paths.get(productImage.getFilePath()));
             String existingImageHash = DigestUtils.md5Hex(fileBytes);
