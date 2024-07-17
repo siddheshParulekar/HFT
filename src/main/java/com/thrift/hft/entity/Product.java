@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
