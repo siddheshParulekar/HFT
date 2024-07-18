@@ -18,7 +18,7 @@ public class HomePageController {
     private static final Logger logger = LogManager.getLogger(HomePageController.class);
 
     @Autowired
-    IHomePageService dashboardService;
+    IHomePageService homePageService;
 
 
     @GetMapping("/wel")
@@ -33,6 +33,6 @@ public class HomePageController {
     @ApiOperation(value = "Auth - Access to all Users")
     public ResponseEntity<ResponseDTO> fetchAllMasters(@PathVariable Mastertype masterType) {
         logger.info("DashboardController - Inside fetchAllMasters method");
-        return ResponseEntityUtils.get(dashboardService.fetchAllMasters(masterType), "Master fetch successfully");
+        return ResponseEntityUtils.get(homePageService.fetchAllMasters(masterType), "Master fetch successfully");
     }
 }
