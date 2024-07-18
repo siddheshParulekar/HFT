@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,6 +38,12 @@ public class CartController {
         logger.info("CartController - Inside deleteFromCart method");
         cartService.deleteFromCart(productId,CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION)));
         return ResponseEntityUtils.get(null, "deleted from cart");
+    }
+
+    @GetMapping("/view-my-cart")
+    public ResponseEntity<ResponseDTO> viewMyCart(HttpServletRequest request) {
+        logger.info("CartController - Inside viewMyCart method");
+        return ResponseEntityUtils.get(cartService.viewMyCart(CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Cart fetched Successfully");
     }
 
 }

@@ -65,7 +65,7 @@ public class CartServiceImpl implements ICartService {
             throw new NotFoundException("There are no articles in your cart");
 
         Cart cart =optionalCart.get();
-        if (cart.getProductList().contains(product))
+        if (!cart.getProductList().contains(product))
             throw new NotFoundException("This article is not present in your cart");
 
         cart.getProductList().remove(product);
@@ -76,6 +76,17 @@ public class CartServiceImpl implements ICartService {
 
         cart.setCartAmount(getCartValue(cart.getProductList()));
         cartRepository.save(cart);
+    }
+
+    @Override
+    public CartDTO viewMyCart(TokenResponse tokenResponse) {
+        logger.info("CartServiceImpl - Inside viewMyCart method");
+        Optional<Cart> optionalCart = cartRepository.findByUserIdAndIsOrdered(tokenResponse.getUserId(), Boolean.FALSE);
+        if (optionalCart.isEmpty())
+            throw new NotFoundException("There are no articles in your cart");
+
+
+        return optionalCart.get().getCartDTO();
     }
 
 
