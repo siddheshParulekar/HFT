@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import static com.thrift.hft.security.SecurityConstants.AUTHORIZATION;
 
 @RestController
-@RequestMapping("/v1/home-page")
+@RequestMapping("/v1/cart")
 public class CartController {
 
     private static final Logger logger = LogManager.getLogger(CartController.class);

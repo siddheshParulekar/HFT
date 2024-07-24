@@ -55,7 +55,7 @@ public class ProductController {
                                                       @RequestParam(required = false, name = "brand") Brand brand,
                                                       @RequestParam(required = false, name = "prodStatus") ProdStatus prodStatus,
                                                       @RequestParam(required = false, name = "approvalStatus") ApprovalStatus approvalStatus,
-                                                      @RequestParam(required = false, name = "size") Size size,
+                                                      @RequestParam(required = false, name = "size1") Size size,
                                                       @RequestParam(required = false,name = "condition") Condition condition) throws IOException {
         logger.info("ProductController - Inside getAllProducts method");
 
