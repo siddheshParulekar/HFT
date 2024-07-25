@@ -28,5 +28,6 @@ public class ProductDTO {
     Map<String,String> prodStatus = new HashMap<>();
     Map<String,String> approvalStatus = new HashMap<>();
     Map<String,String> size = new HashMap<>();
+    Map<String,String> color = new HashMap<>();
     List<ProdImageDTO> imageList;
 }

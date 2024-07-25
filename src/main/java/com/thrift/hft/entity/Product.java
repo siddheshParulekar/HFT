@@ -41,10 +41,13 @@ public class Product extends Auditable<String> {
     ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
     @Enumerated(EnumType.STRING)
     Size size  = Size.FREE_SIZE;
+    @Enumerated(EnumType.STRING)
+    Colour colour;
 
 
 
-    public Product(String description, BigDecimal prize, Condition condition, Category category, SubCategory subCategory, Brand brand, Long sellerId, Size size) {
+
+    public Product(String description, BigDecimal prize, Condition condition, Category category, SubCategory subCategory, Brand brand, Long sellerId, Size size,Colour colour) {
         this.description = description;
         this.prize = prize;
         this.condition = condition;
@@ -53,9 +56,10 @@ public class Product extends Auditable<String> {
         this.brand = brand;
         this.sellerId = sellerId;
         this.size= size;
+        this.colour = colour;
     }
 
     public ProductDTO getProductDTO() throws IOException {
-        return  new ProductDTO(id, description,prize,CommonUtils.getEnumMap(condition.name(),condition.value()),CommonUtils.getEnumMap(category.name(),category.value()) ,CommonUtils.getEnumMap(subCategory.name(),subCategory.value()),CommonUtils.getEnumMap(brand.name(),brand.value()),sellerId,CommonUtils.getEnumMap(prodStatus.name(),prodStatus.value()),CommonUtils.getEnumMap(approvalStatus.name(),approvalStatus.value()) ,CommonUtils.getEnumMap(size.name(),size.value()), CommonUtils.getProductImages(id));
+        return  new ProductDTO(id, description,prize,CommonUtils.getEnumMap(condition.name(),condition.value()),CommonUtils.getEnumMap(category.name(),category.value()) ,CommonUtils.getEnumMap(subCategory.name(),subCategory.value()),CommonUtils.getEnumMap(brand.name(),brand.value()),sellerId,CommonUtils.getEnumMap(prodStatus.name(),prodStatus.value()),CommonUtils.getEnumMap(approvalStatus.name(),approvalStatus.value()) ,CommonUtils.getEnumMap(size.name(),size.value()), CommonUtils.getEnumMap(colour.name(),colour.value()),CommonUtils.getProductImages(id));
     }
 }

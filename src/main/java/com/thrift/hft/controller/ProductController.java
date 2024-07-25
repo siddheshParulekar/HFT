@@ -40,10 +40,11 @@ public class ProductController {
                                                                             @RequestPart(name = "subCategory") String subCategory,
                                                                             @RequestPart(name = "brand") String brand,
                                                                             @RequestPart(name = "size") String size,
+                                                                             @RequestPart(name = "color") String color,
                                                                             @RequestPart(name = "files") MultipartFile[] files,
                                                                             HttpServletRequest request
                                                                             ) throws IOException {
-        return ResponseEntityUtils.get(productService.createSellRequest(new ProductRequest(description,new BigDecimal(amount),condition,category,subCategory,brand,size,files),CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Product added successfully");
+        return ResponseEntityUtils.get(productService.createSellRequest(new ProductRequest(description,new BigDecimal(amount),condition,category,subCategory,brand,size,color,files),CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Product added successfully");
     }
 
 
@@ -55,11 +56,12 @@ public class ProductController {
                                                       @RequestParam(required = false, name = "brand") Brand brand,
                                                       @RequestParam(required = false, name = "prodStatus") ProdStatus prodStatus,
                                                       @RequestParam(required = false, name = "approvalStatus") ApprovalStatus approvalStatus,
-                                                      @RequestParam(required = false, name = "size1") Size size,
+                                                      @RequestParam(required = false, name = "fit") Size size,
+                                                      @RequestParam(required = false, name = "color") Colour colour,
                                                       @RequestParam(required = false,name = "condition") Condition condition) throws IOException {
         logger.info("ProductController - Inside getAllProducts method");
 
-        return ResponseEntityUtils.get(productService.getAllProduct(new GetAllProductRequest(pageable,category,subCategory,brand,prodStatus,approvalStatus,size,condition)),"Products fetched ");
+        return ResponseEntityUtils.get(productService.getAllProduct(new GetAllProductRequest(pageable,category,subCategory,brand,prodStatus,approvalStatus,size,colour,condition)),"Products fetched ");
 
     }
 
