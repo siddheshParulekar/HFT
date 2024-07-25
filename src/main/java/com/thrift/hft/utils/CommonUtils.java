@@ -186,5 +186,21 @@ public class CommonUtils {
         return resolvedBrand;
     }
 
+    public static Colour getColor(String color) {
+        if (color == null)
+            throw new InvalidException("color type cannot be null");
+        final Map<String, Colour> subCategoryMap = new HashMap<>();
+        for (Colour category1 : Colour.values()) {
+            subCategoryMap.put(category1.name().toLowerCase(), category1);
+        }
+        String normalizedBrand = color.trim().toLowerCase();
+
+        Colour resolvedBrand = subCategoryMap.get(normalizedBrand);
+        if (resolvedBrand == null) {
+            throw new IllegalArgumentException("Invalid color type");
+        }
+        return resolvedBrand;
+    }
+
 }
 

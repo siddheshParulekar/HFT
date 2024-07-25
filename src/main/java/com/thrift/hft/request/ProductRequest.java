@@ -22,5 +22,6 @@ public class ProductRequest {
     String subCategory;
     String brand;
     String size;
+    String color;
     MultipartFile[] files;
 }

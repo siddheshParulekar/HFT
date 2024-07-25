@@ -72,6 +72,7 @@ public class ProductServiceImpl implements IProductService {
                 .equals("prodStatus",getAllProductRequest.getProdStatus())
                 .equals("approvalStatus", getAllProductRequest.getApprovalStatus())
                 .equals("size", getAllProductRequest.getSize())
+                .equals("colour", getAllProductRequest.getColour())
                 .build();
 
         Page<Product> productPage = productRepository.findAll(specification,getAllProductRequest.getPageable());
@@ -106,7 +107,7 @@ public class ProductServiceImpl implements IProductService {
         }
 
         Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
-               CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize())));
+               CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize()),CommonUtils.getColor(pr.getColor())));
 
 
             for (MultipartFile file : pr.getFiles())

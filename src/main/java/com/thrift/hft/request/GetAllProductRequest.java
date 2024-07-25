@@ -21,5 +21,6 @@ public class GetAllProductRequest {
     ProdStatus prodStatus;
     ApprovalStatus approvalStatus;
     Size size;
+    Colour colour;
     Condition condition;
 }
