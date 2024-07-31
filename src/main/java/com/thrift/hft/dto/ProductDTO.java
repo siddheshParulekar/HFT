@@ -17,7 +17,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDTO {
 
-    Long id;
+    String id;
     String description;
     BigDecimal prize;
     Map<String,String> condition = new HashMap<>();

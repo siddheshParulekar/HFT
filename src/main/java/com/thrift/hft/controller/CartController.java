@@ -26,14 +26,14 @@ public class CartController {
 
 
     @PostMapping("/add-to-cart/{pid}")
-    public ResponseEntity<ResponseDTO> addToCart(@PathVariable("pid") Long productId,
+    public ResponseEntity<ResponseDTO> addToCart(@PathVariable("pid") String productId,
                                                  HttpServletRequest request) {
         logger.info("CartController - Inside addToCart method");
         return ResponseEntityUtils.get(cartService.addToCart(productId, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Added to cart");
     }
 
     @PostMapping("/delete-from-cart/{pid}")
-    public ResponseEntity<ResponseDTO> deleteFromCart(@PathVariable("pid") Long productId,
+    public ResponseEntity<ResponseDTO> deleteFromCart(@PathVariable("pid") String productId,
                                                  HttpServletRequest request) {
         logger.info("CartController - Inside deleteFromCart method");
         cartService.deleteFromCart(productId,CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION)));

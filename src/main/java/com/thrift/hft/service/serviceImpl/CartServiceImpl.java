@@ -31,7 +31,7 @@ public class CartServiceImpl implements ICartService {
     CartRepository cartRepository;
 
     @Override
-    public CartDTO addToCart(Long productId, TokenResponse tokenResponse) {
+    public CartDTO addToCart(String productId, TokenResponse tokenResponse) {
         logger.info("CartServiceImpl - Inside addToCart method");
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Article not found"));
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndIsOrdered(tokenResponse.getUserId(), Boolean.FALSE);
@@ -57,7 +57,7 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public void deleteFromCart(Long productId, TokenResponse tokenResponse) {
+    public void deleteFromCart(String productId, TokenResponse tokenResponse) {
         logger.info("CartServiceImpl - Inside deleteFromCart method");
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Article not found"));
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndIsOrdered(tokenResponse.getUserId(), Boolean.FALSE);
@@ -83,7 +83,7 @@ public class CartServiceImpl implements ICartService {
         logger.info("CartServiceImpl - Inside viewMyCart method");
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndIsOrdered(tokenResponse.getUserId(), Boolean.FALSE);
         if (optionalCart.isEmpty())
-            throw new NotFoundException("There are no articles in your cart");
+            return new CartDTO();
 
 
         return optionalCart.get().getCartDTO();
