@@ -48,4 +48,5 @@ public class UserController {
         logger.info("UserController- inside registerUser method");
         return ResponseEntityUtils.get(userService.updateAddress(updateAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Address updated successfully");
     }
+
 }
