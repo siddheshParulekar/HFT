@@ -12,7 +12,7 @@ public interface IProductService {
 
     Page<ProductDTO> getAllProduct(GetAllProductRequest getAllProductRequest) throws IOException;
 
-    ProductDTO viewProduct(Long pid) throws IOException;
+    ProductDTO viewProduct(String pid) throws IOException;
 
     ProductDTO createSellRequest(ProductRequest request, TokenResponse tokenResponse) throws IOException;
 }

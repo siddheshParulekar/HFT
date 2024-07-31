@@ -67,7 +67,7 @@ public class ProductController {
 
     @GetMapping("/view-product/{pid}")
     @ApiOperation(value = "Auth - Access to all Users")
-    public ResponseEntity<ResponseDTO> viewProduct(@PathVariable("pid") Long pid) throws IOException {
+    public ResponseEntity<ResponseDTO> viewProduct(@PathVariable("pid") String pid) throws IOException {
         logger.info("ProductController - Inside viewProduct method");
 
         return ResponseEntityUtils.get(productService.viewProduct(pid),"Product fetched ");

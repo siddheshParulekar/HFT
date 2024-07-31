@@ -86,7 +86,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductDTO viewProduct(Long pid) throws IOException {
+    public ProductDTO viewProduct(String  pid) throws IOException {
         logger.info("ProductServiceImpl - Inside getAllProduct method");
         Product product = productRepository.findById(pid).orElseThrow(() -> new NotFoundException("Product not found"));
         return product.getProductDTO();

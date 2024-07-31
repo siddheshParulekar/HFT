@@ -70,7 +70,7 @@ public class CommonUtils {
 
 
 
-    public static List<ProdImageDTO> getProductImages(Long productId) throws IOException {
+    public static List<ProdImageDTO> getProductImages(String productId) throws IOException {
         log.info("CommonUtils - Inside getProductImages method");
         List<ProdImageDTO> prodImageList= new ArrayList<>();
         List<ProductImage> imageList = prodImageRepository.findByProductId(productId);
