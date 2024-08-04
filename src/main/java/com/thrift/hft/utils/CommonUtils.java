@@ -124,7 +124,7 @@ public class CommonUtils {
 
     public static Brand getBrand(String brand) {
         if (brand == null)
-            throw new InvalidException("Brand type cannot be null");
+            return Brand.OTHERS;
           final Map<String, Brand> brandMap = new HashMap<>();
         for (Brand brands : Brand.values()) {
             brandMap.put(brands.name().toLowerCase(), brands);
@@ -140,7 +140,7 @@ public class CommonUtils {
 
     public static Category getCategory(String category) {
         if (category == null)
-            throw new InvalidException("category type cannot be null");
+            return Category.UNISEX;
         final Map<String, Category> categoryMap = new HashMap<>();
         for (Category category1 : Category.values()) {
             categoryMap.put(category1.name().toLowerCase(), category1);
@@ -156,7 +156,7 @@ public class CommonUtils {
 
     public static SubCategory getSubCategory(String subCategory) {
         if (subCategory == null)
-            throw new InvalidException("subCategory type cannot be null");
+            return SubCategory.OTHERS;
         final Map<String, SubCategory> subCategoryMap = new HashMap<>();
         for (SubCategory category1 : SubCategory.values()) {
             subCategoryMap.put(category1.name().toLowerCase(), category1);
@@ -172,7 +172,7 @@ public class CommonUtils {
 
     public static Size getSize(String size) {
         if (size == null)
-            throw new InvalidException("size type cannot be null");
+            return Size.FREE_SIZE;
         final Map<String, Size> subCategoryMap = new HashMap<>();
         for (Size category1 : Size.values()) {
             subCategoryMap.put(category1.name().toLowerCase(), category1);
@@ -188,7 +188,7 @@ public class CommonUtils {
 
     public static Colour getColor(String color) {
         if (color == null)
-            throw new InvalidException("color type cannot be null");
+            return Colour.OTHER;
         final Map<String, Colour> subCategoryMap = new HashMap<>();
         for (Colour category1 : Colour.values()) {
             subCategoryMap.put(category1.name().toLowerCase(), category1);

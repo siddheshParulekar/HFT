@@ -1,7 +1,7 @@
 package com.thrift.hft.controller;
 
 import com.thrift.hft.dto.ResponseDTO;
-import com.thrift.hft.request.UpdateAddressRequest;
+import com.thrift.hft.request.AddAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.service.IUserService;
@@ -43,9 +43,9 @@ public class UserController {
     }
 
     @PostMapping("/add-address")
-    public ResponseEntity<ResponseDTO> updateAddress(@RequestBody @Valid UpdateAddressRequest updateAddressRequest,
+    public ResponseEntity<ResponseDTO> addAddress(@RequestBody @Valid AddAddressRequest addAddressRequest,
                                                      HttpServletRequest request) {
-        logger.info("UserController- inside registerUser method");
-        return ResponseEntityUtils.get(userService.updateAddress(updateAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Address updated successfully");
+        logger.info("UserController- inside addAddress method");
+        return ResponseEntityUtils.get(userService.addAddress(addAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Address updated successfully");
     }
 }

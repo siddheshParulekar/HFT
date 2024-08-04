@@ -13,9 +13,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressDTO {
 
+    String userName;
     String houseNumber;
     String streetAddress;
-    String locality;
     String landmark;
     String city;
     String state;

@@ -12,7 +12,8 @@ public enum Colour {
     PINK("Pink"),
     BROWN("Brown"),
     BEIGE("Beige"),
-    GREY("Grey");
+    GREY("Grey"),
+    OTHER("Other");
 
 
     private String value;

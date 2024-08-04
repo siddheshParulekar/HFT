@@ -30,11 +30,11 @@ public class Product extends Auditable<String> {
     String description;
     BigDecimal prize;
     @Enumerated(EnumType.STRING)
-    Condition condition;
+    Condition condition ;
     @Enumerated(EnumType.STRING)
-    Category category;
+    Category category = Category.UNISEX;
     @Enumerated(EnumType.STRING)
-    SubCategory subCategory;
+    SubCategory subCategory = SubCategory.OTHERS;
     @Enumerated(EnumType.STRING)
     Brand brand;
     Long sellerId;
@@ -45,7 +45,7 @@ public class Product extends Auditable<String> {
     @Enumerated(EnumType.STRING)
     Size size  = Size.FREE_SIZE;
     @Enumerated(EnumType.STRING)
-    Colour colour;
+    Colour colour = Colour.OTHER;
 
 
 

@@ -1,8 +1,7 @@
 package com.thrift.hft.service;
 
 import com.thrift.hft.dto.UserDTO;
-import com.thrift.hft.entity.User;
-import com.thrift.hft.request.UpdateAddressRequest;
+import com.thrift.hft.request.AddAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.response.TokenResponse;
@@ -13,6 +12,6 @@ public interface IUserService {
 
     UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest, TokenResponse tokenResponse);
 
-    UserDTO updateAddress(UpdateAddressRequest updateAddressRequest,TokenResponse tokenResponse);
+    UserDTO addAddress(AddAddressRequest updateAddressRequest, TokenResponse tokenResponse);
 
 }

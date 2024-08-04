@@ -36,11 +36,11 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> createSellRequest(@RequestPart(name = "amount") String amount,
                                                                             @RequestPart(name = "description") String description,
                                                                             @RequestPart(name = "condition") String condition,
-                                                                            @RequestPart(name = "category") String category,
-                                                                            @RequestPart(name = "subCategory") String subCategory,
-                                                                            @RequestPart(name = "brand") String brand,
-                                                                            @RequestPart(name = "size") String size,
-                                                                             @RequestPart(name = "color") String color,
+                                                                            @RequestPart(name = "category",required = false) String category,
+                                                                            @RequestPart(name = "subCategory",required = false) String subCategory,
+                                                                            @RequestPart(name = "brand",required = false) String brand,
+                                                                            @RequestPart(name = "size",required = false) String size,
+                                                                             @RequestPart(name = "color",required = false) String color,
                                                                             @RequestPart(name = "files") MultipartFile[] files,
                                                                             HttpServletRequest request
                                                                             ) throws IOException {

@@ -12,7 +12,7 @@ import com.thrift.hft.repository.AccessTokenRepository;
 import com.thrift.hft.repository.AddressRepository;
 import com.thrift.hft.repository.UserRepository;
 import com.thrift.hft.request.TokenRequest;
-import com.thrift.hft.request.UpdateAddressRequest;
+import com.thrift.hft.request.AddAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.response.LoginResponse;
@@ -86,21 +86,23 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDTO updateAddress(UpdateAddressRequest updateAddressRequest, TokenResponse tokenResponse) {
+    public UserDTO addAddress(AddAddressRequest addAddressRequest, TokenResponse tokenResponse) {
         logger.info("UserServiceImpl - Inside updateAddress method");
         User user = userRepository.findById(tokenResponse.getUserId()).orElseThrow(()->new NotFoundException("User Not Found with this userId"));
 
-        addressRepository.deleteByAddressTypeAndUserId(updateAddressRequest.getAddressType(), tokenResponse.getUserId());
+        if (addAddressRequest.getAddressType() != null)
+            addressRepository.deleteByAddressTypeAndUserId(addAddressRequest.getAddressType(), tokenResponse.getUserId());
 
-        addressRepository.save(Address.builder().houseNumber(updateAddressRequest.getHouseNumber())
-                .streetAddress(updateAddressRequest.getStreetAddress())
-                        .locality(updateAddressRequest.getLocality())
-                        .landmark(updateAddressRequest.getLandmark())
-                        .city(updateAddressRequest.getCity())
-                        .state(updateAddressRequest.getState())
-                        .pinCode(updateAddressRequest.getPinCode())
-                        .country(updateAddressRequest.getCountry())
-                        .addressType(updateAddressRequest.getAddressType())
+        addressRepository.save(Address.builder()
+                        .userName(addAddressRequest.getName())
+                        .houseNumber(addAddressRequest.getHouseNumber())
+                        .streetAddress(addAddressRequest.getStreetAddress())
+                        .landmark(addAddressRequest.getLandmark())
+                        .city(addAddressRequest.getCity())
+                        .state(addAddressRequest.getState())
+                        .pinCode(addAddressRequest.getPinCode())
+                        .country(addAddressRequest.getCountry())
+                        .addressType(addAddressRequest.getAddressType())
                         .userId(tokenResponse.getUserId()).build()
                 );
 
