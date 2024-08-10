@@ -6,6 +6,7 @@ import com.thrift.hft.dto.AddressDTO;
 import com.thrift.hft.enums.AddressType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -18,8 +19,10 @@ import javax.persistence.*;
 public class Address extends Auditable<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(unique = true)
+    String id;
     String userName;
     String houseNumber;
     String streetAddress;
@@ -35,6 +38,6 @@ public class Address extends Auditable<String> {
 
 
     public AddressDTO getAddressDTO(){
-        return new AddressDTO(userName,houseNumber,streetAddress,landmark,city,state,pinCode,country,addressType,userId);
+        return new AddressDTO(id,userName,houseNumber,streetAddress,landmark,city,state,pinCode,country,addressType,userId);
     }
 }

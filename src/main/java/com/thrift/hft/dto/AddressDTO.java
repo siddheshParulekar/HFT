@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressDTO {
 
+    String id;
     String userName;
     String houseNumber;
     String streetAddress;
