@@ -69,3 +69,9 @@ hft:
 app:
   cors:
     origins: ${CORS_ORIGINS:http://localhost:8081/,http://localhost:4200}
+
+razorpay:
+  key:
+    id: rzp_test_6vwFWgyZcuROBF
+  secret:
+    key: RmReE75RxK6n3womCVvZoH5p
