@@ -48,4 +48,5 @@ public class UserController {
         logger.info("UserController- inside addAddress method");
         return ResponseEntityUtils.get(userService.addAddress(addAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Address updated successfully");
     }
+
 }

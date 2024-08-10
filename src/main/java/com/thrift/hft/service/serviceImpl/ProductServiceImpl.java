@@ -5,6 +5,8 @@ import com.thrift.hft.entity.BatchDetails;
 import com.thrift.hft.entity.ProductImage;
 import com.thrift.hft.entity.Product;
 import com.thrift.hft.entity.User;
+import com.thrift.hft.enums.ApprovalStatus;
+import com.thrift.hft.enums.Role;
 import com.thrift.hft.exceptions.AlreadyExistsException;
 import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
@@ -37,6 +39,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -120,6 +123,24 @@ public class ProductServiceImpl implements IProductService {
 
         return product.getProductDTO();
     }
+
+    @Override
+    public ProductDTO approveSellRequest(String productId, TokenResponse tokenResponse) throws IOException {
+       logger.info("ProductServiceImpl - Inside approveSellRequest method");
+
+       if (!tokenResponse.getAuthority().equals(Role.ADMIN.name()))
+           throw new InvalidException("Only admin can approve the sell request");
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty())
+            throw new NotFoundException("Product not found");
+
+        Product product  = productOptional.get();
+        product.setApprovalStatus(ApprovalStatus.APPROVED);
+        productRepository.save(product);
+
+        return product.getProductDTO();
+    }
+
     public boolean checkForDuplicate(MultipartFile file,Long userId) throws IOException {
         String uploadedImageHash = computeHash(file);
 

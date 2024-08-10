@@ -15,4 +15,6 @@ public interface IProductService {
     ProductDTO viewProduct(String pid) throws IOException;
 
     ProductDTO createSellRequest(ProductRequest request, TokenResponse tokenResponse) throws IOException;
+
+    ProductDTO approveSellRequest(String productId,TokenResponse tokenResponse) throws IOException;
 }
