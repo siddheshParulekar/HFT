@@ -70,9 +70,6 @@ public class UserServiceImpl implements IUserService {
         User user = userRepository.findById(userId).orElseThrow(()->new NotFoundException("User Not Found with this userId"));
 
         if (updateUserRequest != null){
-            if (updateUserRequest.getAddress() != null)
-                user.setAddress(updateUserRequest.getAddress());
-
             if (updateUserRequest.getEmail() != null)
                 user.setEmail(updateUserRequest.getEmail());
 
@@ -107,6 +104,14 @@ public class UserServiceImpl implements IUserService {
                 );
 
         return user.getUserDTO();
+    }
+
+    @Override
+    public UserDTO fetchUserProfile(Long userId,TokenResponse tokenResponse) {
+        logger.info("UserServiceImpl - Inside fetchUserProfile method");
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
+        return user.getUserDTO();
+
     }
 
     public LoginResponse processOAuthPostLog(String email,String name){

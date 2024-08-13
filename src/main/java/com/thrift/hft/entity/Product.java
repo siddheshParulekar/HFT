@@ -1,5 +1,6 @@
 package com.thrift.hft.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.thrift.hft.audit.Auditable;
 import com.thrift.hft.dto.ProductDTO;
 import com.thrift.hft.enums.*;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Product extends Auditable<String> {
 
     @Id
