@@ -34,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +71,10 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    KafkaTemplate<String,Object> kafkaTemplate;
+
 
 
 
@@ -147,6 +152,9 @@ public class ProductServiceImpl implements IProductService {
             if (checkForDuplicate(file,tokenResponse.getUserId()))
                 throw new AlreadyExistsException("Article with same image already exists");
         }
+
+        pr.setUserId(tokenResponse.getUserId());
+        kafkaTemplate.send("sell_request","hft",pr);
 
         Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
                CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize()),CommonUtils.getColor(pr.getColor())));
