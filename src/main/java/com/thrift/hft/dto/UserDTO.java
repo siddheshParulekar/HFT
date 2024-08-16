@@ -1,6 +1,7 @@
 package com.thrift.hft.dto;
 
 import com.thrift.hft.entity.Address;
+import com.thrift.hft.enums.Gender;
 import com.thrift.hft.enums.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,6 @@ public class UserDTO {
     String email;
     Role role;
     Boolean isActive;
-    String address;
+    Gender gender;
     List<AddressDTO> addressDTOList;
 }

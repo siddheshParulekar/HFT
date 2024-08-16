@@ -56,6 +56,12 @@ spring:
             client-id: 268230345751-n10fj0htcqvu851lmr4c5afvnt81cgqg.apps.googleusercontent.com
             client-secret: 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
             scope: email,profile
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+    time-to-live: 60000
 hft:
   jwt:
     secret-key: "9y$B&E)H@McQeThWmZq4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3"

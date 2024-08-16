@@ -2,6 +2,7 @@ package com.thrift.hft.entity;
 
 import com.thrift.hft.audit.Auditable;
 import com.thrift.hft.dto.UserDTO;
+import com.thrift.hft.enums.Gender;
 import com.thrift.hft.enums.Role;
 import com.thrift.hft.utils.CommonUtils;
 import lombok.AllArgsConstructor;
@@ -31,9 +32,11 @@ public class User extends Auditable<String> {
     Role role;
     @Builder.Default
     Boolean isActive = Boolean.TRUE;
-    String address;
+    @Builder.Default
+    Gender gender = Gender.NA;
+
 
     public UserDTO getUserDTO() {
-        return new UserDTO(id, name,  mobileNumber, email , role,isActive,address, CommonUtils.getUserAddress(id));
+        return new UserDTO(id, name,  mobileNumber, email , role,isActive, gender,CommonUtils.getUserAddress(id));
     }
 }

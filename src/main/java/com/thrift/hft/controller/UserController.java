@@ -49,4 +49,10 @@ public class UserController {
         return ResponseEntityUtils.get(userService.addAddress(addAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "Address updated successfully");
     }
 
+    @GetMapping("/fetch-my-profile/{userId}")
+    public ResponseEntity<ResponseDTO> fetchMyProfile(@PathVariable("userId") Long userId,HttpServletRequest request){
+        logger.info("UserController - inside fetchMyProfile method");
+        return ResponseEntityUtils.get(userService.fetchUserProfile(userId,CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "User fetch successfully");
+    }
+
 }
