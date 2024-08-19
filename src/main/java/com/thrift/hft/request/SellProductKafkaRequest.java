@@ -8,12 +8,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductRequest {
+public class SellProductKafkaRequest {
+
 
     String description;
     BigDecimal prize;
@@ -23,6 +25,7 @@ public class ProductRequest {
     String brand;
     String size;
     String color;
-    MultipartFile[] files;
+    List<String> filePaths;
+    Long userId;
 
 }

@@ -44,7 +44,8 @@ public class ProductController {
                                                                             @RequestPart(name = "files") MultipartFile[] files,
                                                                             HttpServletRequest request
                                                                             ) throws IOException {
-        return ResponseEntityUtils.get(productService.createSellRequest(new ProductRequest(description,new BigDecimal(amount),condition,category,subCategory,brand,size,color,files),CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Product added successfully");
+        productService.createSellRequest(new ProductRequest(description,new BigDecimal(amount),condition,category,subCategory,brand,size,color,files),CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION)));
+        return ResponseEntityUtils.get(null,"Request for product listing created successfully");
     }
 
 

@@ -1,24 +1,21 @@
 package com.thrift.hft.service.serviceImpl;
 
 import com.thrift.hft.dto.ProductDTO;
-import com.thrift.hft.entity.BatchDetails;
-import com.thrift.hft.entity.ProductImage;
 import com.thrift.hft.entity.Product;
-import com.thrift.hft.entity.User;
+import com.thrift.hft.entity.ProductImage;
 import com.thrift.hft.enums.ApprovalStatus;
 import com.thrift.hft.enums.Role;
 import com.thrift.hft.exceptions.AlreadyExistsException;
 import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
-import com.thrift.hft.filter.FilterBuilder;
 import com.thrift.hft.properties.DocumentPath;
-import com.thrift.hft.queue.JMSProducer;
 import com.thrift.hft.repository.BatchDetailsRepository;
 import com.thrift.hft.repository.ProdImageRepository;
 import com.thrift.hft.repository.ProductRepository;
 import com.thrift.hft.repository.UserRepository;
 import com.thrift.hft.request.GetAllProductRequest;
 import com.thrift.hft.request.ProductRequest;
+import com.thrift.hft.request.SellProductKafkaRequest;
 import com.thrift.hft.response.GellAllProductResponse;
 import com.thrift.hft.response.TokenResponse;
 import com.thrift.hft.service.IProductService;
@@ -29,21 +26,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -140,7 +132,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductDTO createSellRequest(ProductRequest pr, TokenResponse tokenResponse) throws IOException {
+    public void createSellRequest(ProductRequest pr, TokenResponse tokenResponse) throws IOException {
         logger.info("ProductServiceImpl - Inside createSellRequest method");
         if (pr.getFiles() == null){
             throw new InvalidException("Please upload at least two images for the product");
@@ -153,22 +145,35 @@ public class ProductServiceImpl implements IProductService {
                 throw new AlreadyExistsException("Article with same image already exists");
         }
 
-        pr.setUserId(tokenResponse.getUserId());
-        kafkaTemplate.send("sell_request","hft",pr);
+//        Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
+//               CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize()),CommonUtils.getColor(pr.getColor())));
 
-        Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
-               CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize()),CommonUtils.getColor(pr.getColor())));
-
+        List<String> filePaths =new ArrayList<>();
 
             for (MultipartFile file : pr.getFiles())
                 if (!file.isEmpty()) {
-                    String filePath = uploadDocumentsUtils.uploadDocuments(file, documentPath.getProductImages(), product.getBrand().name());
+                    String filePath = uploadDocumentsUtils.uploadDocuments(file, documentPath.getProductImages(), CommonUtils.getBrand(pr.getBrand()).name());
+                    filePaths.add(filePath);
                     String[] parts = filePath.split("/");
                     String fileName = parts[parts.length - 1];
-                    prodImageRepository.save(new ProductImage(filePath, fileName, product));
+//                    prodImageRepository.save(new ProductImage(filePath, fileName, product));
                 }
 
-        return product.getProductDTO();
+
+        SellProductKafkaRequest sellProductKafkaRequest = new SellProductKafkaRequest(
+                pr.getDescription(),
+                pr.getPrize(),
+                pr.getCondition(),
+                pr.getCategory(),
+                pr.getSubCategory(),
+                pr.getBrand(),
+                pr.getSize(),
+                pr.getColor(),
+                filePaths,
+                tokenResponse.getUserId()
+        );
+
+        kafkaTemplate.send("sell_request","hft",sellProductKafkaRequest);
     }
 
     @Override
