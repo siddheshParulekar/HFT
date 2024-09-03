@@ -3,11 +3,16 @@ package com.thrift.hft.service.serviceImpl;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.thrift.hft.entity.Cart;
 import com.thrift.hft.entity.ThriftOrder;
 import com.thrift.hft.entity.User;
+import com.thrift.hft.exceptions.NotFoundException;
+import com.thrift.hft.repository.CartRepository;
 import com.thrift.hft.repository.ThriftOrderRepository;
 import com.thrift.hft.repository.UserRepository;
+import com.thrift.hft.request.CreateOrderRequest;
 import com.thrift.hft.request.PlaceOrderRequest;
+import com.thrift.hft.response.RazorPayResponse;
 import com.thrift.hft.response.TokenResponse;
 import com.thrift.hft.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +40,15 @@ public class OrderServiceImpl implements IOrderService {
     private RazorpayClient client;
 
     @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
     private ThriftOrderRepository thriftOrderRepository;
 
 
 
-    public ThriftOrder placeOrder(PlaceOrderRequest placeOrderRequest, TokenResponse tokenResponse) throws RazorpayException {
-        log.info("OrderServiceImpl - Inside placeOrder method");
+    public RazorPayResponse crearteOrder(CreateOrderRequest placeOrderRequest, TokenResponse tokenResponse) throws RazorpayException {
+        log.info("OrderServiceImpl - Inside crearteOrder method");
         User user = userRepository.findById(tokenResponse.getUserId()).get();
 
         JSONObject orderReq = new JSONObject();
@@ -53,7 +61,23 @@ public class OrderServiceImpl implements IOrderService {
                 .amount(placeOrderRequest.getAmount())
                 .orderStatus(razorpayOrder.get("status"))
                 .razorpayOrderId(razorpayOrder.get("id"))
+                .cartId(placeOrderRequest.getCartId())
                 .userId(tokenResponse.getUserId()).build();
-       return thriftOrderRepository.save(thriftOrder);
+        thriftOrderRepository.save(thriftOrder);
+       return new RazorPayResponse(razorpayOrder.get("id"),placeOrderRequest.getAmount(),razorpayOrder.get("currency"),razorpayKey);
     }
+
+    @Override
+    public void placeOrder(PlaceOrderRequest placeOrderRequest, TokenResponse tokenResponse) {
+        log.info("OrderServiceImpl - Inside placeOrder method");
+        Cart cart = cartRepository.findById(placeOrderRequest.getCartId()).orElseThrow(()->new NotFoundException("Cart not found"));
+        ThriftOrder thriftOrder = thriftOrderRepository.findByRazorpayOrderId(placeOrderRequest.getOrderId()).orElseThrow(()-> new NotFoundException("Order not found"));
+
+        cart.setIsOrdered(Boolean.TRUE);
+        thriftOrder.setTransactionId(placeOrderRequest.getTransactionId());
+        cartRepository.save(cart);
+        thriftOrderRepository.save(thriftOrder);
+    }
+
+
 }

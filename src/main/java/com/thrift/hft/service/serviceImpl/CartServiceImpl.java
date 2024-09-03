@@ -35,17 +35,16 @@ public class CartServiceImpl implements ICartService {
         logger.info("CartServiceImpl - Inside addToCart method");
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Article not found"));
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndIsOrdered(tokenResponse.getUserId(), Boolean.FALSE);
-        List<Product> products = new ArrayList<>();
         Cart cart;
         if (optionalCart.isPresent()) {
             cart = optionalCart.get();
-            products = cart.getProductList();
-            if (products.contains(product))
+            List<Product> products = new ArrayList<>(cart.getProductList());            if (products.contains(product))
                 throw new AlreadyExistsException("This article already has been added to the cart");
             products.add(product);
             cart.setProductList(products);
             cart.setCartAmount(getCartValue(products));
         } else {
+            List<Product> products = new ArrayList<>();
             products.add(product);
            cart = Cart.builder().userId(tokenResponse.getUserId())
                                 .productList(products)

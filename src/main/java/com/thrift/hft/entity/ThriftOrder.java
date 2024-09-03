@@ -29,5 +29,6 @@ public class ThriftOrder extends Auditable<String> {
     String orderStatus;
     String razorpayOrderId;
     Long userId;
+    String transactionId;
 
 }

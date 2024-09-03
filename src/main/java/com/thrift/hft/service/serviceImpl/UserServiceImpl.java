@@ -107,9 +107,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDTO fetchUserProfile(Long userId,TokenResponse tokenResponse) {
+    public UserDTO fetchUserProfile(TokenResponse tokenResponse) {
         logger.info("UserServiceImpl - Inside fetchUserProfile method");
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
+        User user = userRepository.findById(tokenResponse.getUserId()).orElseThrow(() -> new NotFoundException("user not found"));
         return user.getUserDTO();
 
     }

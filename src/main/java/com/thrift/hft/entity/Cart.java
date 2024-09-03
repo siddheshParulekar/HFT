@@ -31,9 +31,13 @@ public class Cart extends Auditable<String> {
     @Column(unique = true)
     String id;
     Long userId;
-    @OneToMany
-    @Cascade(ALL)
-    List<Product> productList;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "cart_product",
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    List<Product> productList = new ArrayList<>();
     @Builder.Default
     BigDecimal cartAmount =BigDecimal.ZERO;
     @Builder.Default

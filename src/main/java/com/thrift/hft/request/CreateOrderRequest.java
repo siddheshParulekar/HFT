@@ -6,13 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PlaceOrderRequest {
+public class CreateOrderRequest {
 
     String cartId;
-    String orderId;
-    String transactionId;
+    String addressId;
+    BigDecimal amount;
+
 }

@@ -14,6 +14,6 @@ public interface IUserService {
 
     UserDTO addAddress(AddAddressRequest updateAddressRequest, TokenResponse tokenResponse);
 
-    UserDTO fetchUserProfile(Long userId,TokenResponse tokenResponse);
+    UserDTO fetchUserProfile(TokenResponse tokenResponse);
 
 }
