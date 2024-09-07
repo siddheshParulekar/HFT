@@ -7,6 +7,7 @@ import com.thrift.hft.response.TokenResponse;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IProductService {
 
@@ -17,4 +18,7 @@ public interface IProductService {
     ProductDTO createSellRequest(ProductRequest request, TokenResponse tokenResponse) throws IOException;
 
     ProductDTO approveSellRequest(String productId,TokenResponse tokenResponse) throws IOException;
+
+    List<ProductDTO> getSimilarProduct(String pid) throws IOException;
+
 }
