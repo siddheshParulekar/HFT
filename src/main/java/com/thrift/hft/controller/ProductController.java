@@ -72,4 +72,12 @@ public class ProductController {
 
         return ResponseEntityUtils.get(productService.viewProduct(pid),"Product fetched ");
     }
+
+    @GetMapping("/product-recommendation/{pid}")
+    @ApiOperation(value = "Auth - Access to all Users")
+    public ResponseEntity<ResponseDTO> productRecommendation(@PathVariable("pid") String pid) throws IOException {
+        logger.info("ProductController - Inside productRecommendation method");
+
+        return ResponseEntityUtils.get(productService.getSimilarProduct(pid),"Similar Products fetched ");
+    }
 }

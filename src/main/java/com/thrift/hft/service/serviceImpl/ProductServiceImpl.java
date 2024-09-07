@@ -25,7 +25,10 @@ import com.thrift.hft.service.IProductService;
 import com.thrift.hft.service.RedisService;
 import com.thrift.hft.utils.CommonUtils;
 import com.thrift.hft.utils.UploadDocumentsUtils;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +73,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private RedisService redisService;
+    // Assigning weights to different attributes to indicate their importance
+    private static final double CATEGORY_WEIGHT = 0.2;
+    private static final double BRAND_WEIGHT = 0.2;
+    private static final double SIZE_WEIGHT = 0.1;
+    private static final double CONDITION_WEIGHT = 0.1;
+    private static final double COLOUR_WEIGHT = 0.1;
+    private static final double PRICE_WEIGHT = 0.3;
 
 
 
@@ -194,6 +204,23 @@ public class ProductServiceImpl implements IProductService {
         return product.getProductDTO();
     }
 
+
+    
+    @Override
+    public List<ProductDTO> getSimilarProduct(String pid) throws IOException {
+        logger.info("ProductServiceImpl -Inside getSimilarProducts Method");
+        List<Product> productList = getAllProducts();
+        Product product = productRepository.findById(pid).orElseThrow(() -> new NotFoundException("Product not found"));
+        List<Product> similarProducts = findSimilarProducts(product, productList);
+        return similarProducts.stream().map(p-> {
+            try {
+                return p.getProductDTO();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+    }
+
     public boolean checkForDuplicate(MultipartFile file,Long userId) throws IOException {
         String uploadedImageHash = computeHash(file);
 
@@ -215,16 +242,62 @@ public class ProductServiceImpl implements IProductService {
 
     public  List<Product>getAllProducts() {
         logger.info("ProductServiceImpl - Inside getAllProducts method");
-        GellAllProductResponse productList = redisService.get("productList", GellAllProductResponse.class);
-        if (productList != null)
-            return productList.getProductList();
-        else{
-            List<Product> products = productRepository.findAll();
-            if (products!=null){
-                redisService.set("productList",new GellAllProductResponse(products),3L);
-            }
-            return products;
-        }
+//        GellAllProductResponse productList = redisService.get("productList", GellAllProductResponse.class);
+//        if (productList != null)
+//            return productList.getProductList();
+//        else{
+//            List<Product> products = productRepository.findAll();
+//            if (products!=null){
+//                redisService.set("productList",new GellAllProductResponse(products),3L);
+//            }
+//            return products;
+//        }
+        return productRepository.findAll();
     }
+
+    public RealVector convertToFeatureVector(Product product) {
+        double[] features = new double[6];
+
+        // Normalize each feature into a comparable value (scale/weight)
+        features[0] = product.getCategory().ordinal() * CATEGORY_WEIGHT;
+        features[1] = product.getBrand().ordinal() * BRAND_WEIGHT;
+        features[2] = product.getSize().ordinal() * SIZE_WEIGHT;
+        features[3] = product.getCondition().ordinal() * CONDITION_WEIGHT;
+        features[4] = product.getColour().ordinal() * COLOUR_WEIGHT;
+        features[5] = normalizePrice(product.getPrize()) * PRICE_WEIGHT;
+
+        return new ArrayRealVector(features);
+    }
+
+    // Normalize price to a scale of 0-1
+    private double normalizePrice(BigDecimal price) {
+        BigDecimal maxPrice = new BigDecimal("10000"); // Assuming max price in your system
+        return price.divide(maxPrice, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    public double calculateSimilarity(Product p1, Product p2) {
+        RealVector v1 = convertToFeatureVector(p1);
+        RealVector v2 = convertToFeatureVector(p2);
+
+        // Cosine similarity
+        double dotProduct = v1.dotProduct(v2);
+        double normProduct = v1.getNorm() * v2.getNorm();
+
+        return dotProduct / normProduct;
+    }
+
+    // Find similar products for a given product
+    public List<Product> findSimilarProducts(Product targetProduct, List<Product> allProducts) {
+        return allProducts.stream()
+                .filter(product -> !product.getId().equals(targetProduct.getId())) // exclude the target product
+                .sorted((p1, p2) -> Double.compare(
+                        calculateSimilarity(targetProduct, p2),
+                        calculateSimilarity(targetProduct, p1)))
+                .limit(10) // limiting to top 10 similar products
+                .collect(Collectors.toList());
+    }
+
+
+
 
 }
