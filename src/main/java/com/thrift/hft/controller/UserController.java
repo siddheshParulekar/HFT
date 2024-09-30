@@ -55,4 +55,10 @@ public class UserController {
         return ResponseEntityUtils.get(userService.fetchUserProfile(CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), "User fetch successfully");
     }
 
+    @GetMapping("/fetch-my-orders")
+    public ResponseEntity<ResponseDTO> fetchMyOrders(HttpServletRequest request){
+        logger.info("USerController - Inside fetchMyOrders method");
+        return ResponseEntityUtils.get(userService.fetchMyOrder(CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Orders Fetched successfully");
+    }
+
 }

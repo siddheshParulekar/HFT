@@ -1,10 +1,14 @@
 package com.thrift.hft.service;
 
+import com.thrift.hft.dto.CartDTO;
+import com.thrift.hft.dto.OrderDTO;
 import com.thrift.hft.dto.UserDTO;
 import com.thrift.hft.request.AddAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
 import com.thrift.hft.request.UserRequest;
 import com.thrift.hft.response.TokenResponse;
+
+import java.util.List;
 
 public interface IUserService {
 
@@ -15,5 +19,7 @@ public interface IUserService {
     UserDTO addAddress(AddAddressRequest updateAddressRequest, TokenResponse tokenResponse);
 
     UserDTO fetchUserProfile(TokenResponse tokenResponse);
+
+    List<OrderDTO> fetchMyOrder(TokenResponse tokenResponse);
 
 }

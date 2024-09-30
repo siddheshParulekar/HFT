@@ -1,16 +1,15 @@
 package com.thrift.hft.service.serviceImpl;
 
+import com.thrift.hft.dto.CartDTO;
+import com.thrift.hft.dto.OrderDTO;
+import com.thrift.hft.dto.ProductDTO;
 import com.thrift.hft.dto.UserDTO;
-import com.thrift.hft.entity.AccessToken;
-import com.thrift.hft.entity.Address;
-import com.thrift.hft.entity.User;
+import com.thrift.hft.entity.*;
 import com.thrift.hft.enums.Role;
 import com.thrift.hft.exceptions.AlreadyExistsException;
 import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
-import com.thrift.hft.repository.AccessTokenRepository;
-import com.thrift.hft.repository.AddressRepository;
-import com.thrift.hft.repository.UserRepository;
+import com.thrift.hft.repository.*;
 import com.thrift.hft.request.TokenRequest;
 import com.thrift.hft.request.AddAddressRequest;
 import com.thrift.hft.request.UpdateUserRequest;
@@ -25,8 +24,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.thrift.hft.security.SecurityConstants.BEARER;
 
@@ -43,6 +44,11 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     AddressRepository addressRepository;
+    @Autowired
+    ThriftOrderRepository  thriftOrderRepository;
+    @Autowired
+    CartRepository cartRepository;
+
 
 
     @Override
@@ -114,9 +120,21 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    @Override
+    public List<OrderDTO> fetchMyOrder(TokenResponse tokenResponse) {
+        logger.info("UserServiceImpl - Inside fetchMyOrders");
+        List<ThriftOrder> orderList = thriftOrderRepository.findByUserIdAndTransactionIdIsNotNull(tokenResponse.getUserId());
+
+        return orderList.stream().map(o -> {
+            Cart cart = cartRepository.findById(o.getCartId()).get();
+            List<ProductDTO> productList = cart.getCartDTO().getProductList();
+            return new OrderDTO(o.getId(),o.getCreationDate(),productList);
+        }).collect(Collectors.toList());
+    }
+
     public LoginResponse processOAuthPostLog(String email,String name){
         logger.info("UserServiceImpl - Inside processOAuthPostLog method");
-    User user;
+        User user;
         Optional<User> userOptional = userRepository.findByEmail(email);
         user = userOptional.orElseGet(() -> userRepository.save(User.builder()
                 .email(email)
