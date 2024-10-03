@@ -10,6 +10,7 @@ import com.thrift.hft.utils.ResponseEntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,9 +57,10 @@ public class UserController {
     }
 
     @GetMapping("/fetch-my-orders")
-    public ResponseEntity<ResponseDTO> fetchMyOrders(HttpServletRequest request){
+    public ResponseEntity<ResponseDTO> fetchMyOrders(final Pageable pageable,
+                                                        HttpServletRequest request){
         logger.info("USerController - Inside fetchMyOrders method");
-        return ResponseEntityUtils.get(userService.fetchMyOrder(CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Orders Fetched successfully");
+        return ResponseEntityUtils.get(userService.fetchMyOrder(CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION)),pageable),"Orders Fetched successfully");
     }
 
 }
