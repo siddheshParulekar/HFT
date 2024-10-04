@@ -164,4 +164,11 @@ public class FilterBuilder<T> {
         final Specification<T> dateGreaterThanOrEqualTo = Specifications.dateGreaterThanOrEqualTo(path, value);
         return addForNotNullParam(value, dateGreaterThanOrEqualTo);
     }
+
+    public FilterBuilder<T> isNotNull(String path) {
+        Specification<T> notNullSpec = (root, query, cb) -> cb.isNotNull(getPath(root, path));
+        specifications.add(notNullSpec);
+        return this;
+    }
+
 }

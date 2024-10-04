@@ -9,6 +9,7 @@ import com.thrift.hft.enums.Role;
 import com.thrift.hft.exceptions.AlreadyExistsException;
 import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
+import com.thrift.hft.filter.FilterBuilder;
 import com.thrift.hft.repository.*;
 import com.thrift.hft.request.TokenRequest;
 import com.thrift.hft.request.AddAddressRequest;
@@ -22,6 +23,9 @@ import com.thrift.hft.utils.CommonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -121,15 +125,22 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<OrderDTO> fetchMyOrder(TokenResponse tokenResponse) {
+    public Page<OrderDTO> fetchMyOrder(TokenResponse tokenResponse, Pageable pageable) {
         logger.info("UserServiceImpl - Inside fetchMyOrders");
-        List<ThriftOrder> orderList = thriftOrderRepository.findByUserIdAndTransactionIdIsNotNull(tokenResponse.getUserId());
+       // List<ThriftOrder> orderList = thriftOrderRepository.findByUserIdAndTransactionIdIsNotNull(tokenResponse.getUserId());
 
-        return orderList.stream().map(o -> {
+        Specification<ThriftOrder>specification=new FilterBuilder<ThriftOrder>()
+                            .equals("userId", tokenResponse.getUserId())
+                            .isNotNull("transactionId")
+                             .build();
+
+        Page<ThriftOrder> orders = thriftOrderRepository.findAll(specification, pageable);
+        return orders.map(o -> {
             Cart cart = cartRepository.findById(o.getCartId()).get();
             List<ProductDTO> productList = cart.getCartDTO().getProductList();
             return new OrderDTO(o.getId(),o.getCreationDate(),productList);
-        }).collect(Collectors.toList());
+        });
+
     }
 
     public LoginResponse processOAuthPostLog(String email,String name){
