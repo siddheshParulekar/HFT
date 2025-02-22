@@ -20,4 +20,5 @@ public class UpdateUserRequest {
     @Pattern(regexp = "^\\w+([-+.']\\w+)*@[A-Za-z0-9]+([-.][A-Za-z0-9]+)*\\.\\w+([-.]\\w+)*$", message = "Enter valid Email-Id")
     String email;
 
+
 }
