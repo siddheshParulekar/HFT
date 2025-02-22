@@ -144,10 +144,6 @@
 
 	</dependencies>
 
-
-
-
-
 	<build>
 		<plugins>
 			<plugin>

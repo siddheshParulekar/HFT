@@ -11,10 +11,7 @@ import com.thrift.hft.exceptions.InvalidException;
 import com.thrift.hft.exceptions.NotFoundException;
 import com.thrift.hft.filter.FilterBuilder;
 import com.thrift.hft.repository.*;
-import com.thrift.hft.request.TokenRequest;
-import com.thrift.hft.request.AddAddressRequest;
-import com.thrift.hft.request.UpdateUserRequest;
-import com.thrift.hft.request.UserRequest;
+import com.thrift.hft.request.*;
 import com.thrift.hft.response.LoginResponse;
 import com.thrift.hft.response.TokenResponse;
 import com.thrift.hft.security.JwtUtils;
@@ -141,6 +138,32 @@ public class UserServiceImpl implements IUserService {
             return new OrderDTO(o.getId(),o.getCreationDate(),productList);
         });
 
+    }
+
+    @Override
+    public UserDTO editAddress(String addressId, EditAddressRequest editAddressRequest, TokenResponse tokenResponse) {
+        User user = userRepository.findById(tokenResponse.getUserId()).orElseThrow(() -> new NotFoundException("user not found"));
+        Address address = addressRepository.findById(addressId).orElseThrow(() -> new NotFoundException("Address with give Id Does not exist"));
+
+        if (!address.getUserId().equals(tokenResponse.getUserId())) {
+            throw new InvalidException("You are not authorized to edit this address");
+        }
+
+        if(editAddressRequest!=null){
+            if (editAddressRequest.getName() != null) address.setUserName(editAddressRequest.getName());
+            if (editAddressRequest.getHouseNumber() != null) address.setHouseNumber(editAddressRequest.getHouseNumber());
+            if (editAddressRequest.getStreetAddress() != null) address.setStreetAddress(editAddressRequest.getStreetAddress());
+            if (editAddressRequest.getLandmark() != null) address.setLandmark(editAddressRequest.getLandmark());
+            if (editAddressRequest.getCity() != null) address.setCity(editAddressRequest.getCity());
+            if (editAddressRequest.getState() != null) address.setState(editAddressRequest.getState());
+            if (editAddressRequest.getPinCode() != null) address.setPinCode(editAddressRequest.getPinCode());
+            if (editAddressRequest.getCountry() != null) address.setCountry(editAddressRequest.getCountry());
+            if (editAddressRequest.getAddressType() != null) address.setAddressType(editAddressRequest.getAddressType());
+
+            addressRepository.save(address);
+        }
+
+        return user.getUserDTO();
     }
 
     public LoginResponse processOAuthPostLog(String email,String name){
