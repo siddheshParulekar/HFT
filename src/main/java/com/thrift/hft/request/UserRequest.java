@@ -19,7 +19,7 @@ import javax.validation.constraints.Pattern;
 public class UserRequest {
 
     @NotEmpty(message = "Enter valid First Name")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "Enter valid First Name")
+    @Pattern(regexp = "^[a-zA-Z ]*$", message = "Enter valid First Name")
     String name;
 
     @NotNull(message = "Enter valid Mobile Number")
