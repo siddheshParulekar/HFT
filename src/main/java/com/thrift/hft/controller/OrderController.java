@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.thrift.hft.security.SecurityConstants.AUTHORIZATION;
@@ -37,7 +38,7 @@ public class OrderController {
 
     @PostMapping("/place-order")
     public ResponseEntity<ResponseDTO> placeOrder(@RequestBody PlaceOrderRequest placeOrderRequest,
-                                                   HttpServletRequest request)  {
+                                                   HttpServletRequest request) throws MessagingException {
         log.info("OrderController - Inside placeOrder request");
         orderService.placeOrder(placeOrderRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION)));
         return ResponseEntityUtils.get(null,"Order placed successfully");

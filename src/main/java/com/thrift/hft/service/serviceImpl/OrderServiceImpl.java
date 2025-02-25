@@ -15,12 +15,14 @@ import com.thrift.hft.request.PlaceOrderRequest;
 import com.thrift.hft.response.RazorPayResponse;
 import com.thrift.hft.response.TokenResponse;
 import com.thrift.hft.service.IOrderService;
+import com.thrift.hft.utils.MailUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.math.BigDecimal;
 
 @Service
@@ -68,15 +70,19 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void placeOrder(PlaceOrderRequest placeOrderRequest, TokenResponse tokenResponse) {
+    public void placeOrder(PlaceOrderRequest placeOrderRequest, TokenResponse tokenResponse) throws MessagingException {
         log.info("OrderServiceImpl - Inside placeOrder method");
         Cart cart = cartRepository.findById(placeOrderRequest.getCartId()).orElseThrow(()->new NotFoundException("Cart not found"));
         ThriftOrder thriftOrder = thriftOrderRepository.findByRazorpayOrderId(placeOrderRequest.getOrderId()).orElseThrow(()-> new NotFoundException("Order not found"));
 
+        User user = userRepository.findById(cart.getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
+        MailUtils.send(user.getEmail(),"Order Placed","Hello",null);
         cart.setIsOrdered(Boolean.TRUE);
         thriftOrder.setTransactionId(placeOrderRequest.getTransactionId());
+        thriftOrder.setOrderStatus("PAID");
         cartRepository.save(cart);
         thriftOrderRepository.save(thriftOrder);
+
     }
 
 
