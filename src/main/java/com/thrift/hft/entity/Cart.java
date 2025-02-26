@@ -42,7 +42,8 @@ public class Cart extends Auditable<String> {
     BigDecimal cartAmount =BigDecimal.ZERO;
     @Builder.Default
     Boolean isOrdered = Boolean.FALSE;
-
+    BigDecimal total;
+    BigDecimal deliveryCharges = new BigDecimal(1000);
 
     public CartDTO getCartDTO(){
         List<ProductDTO> productDTOS =new ArrayList<>();
@@ -55,7 +56,7 @@ public class Cart extends Auditable<String> {
                 }
             }).collect(Collectors.toList());
         }
-        return  new CartDTO(id,userId,cartAmount,isOrdered,productDTOS);
+        return  new CartDTO(id,userId,cartAmount,deliveryCharges,total,isOrdered,productDTOS);
     }
 
 }

@@ -4,6 +4,7 @@ import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.thrift.hft.entity.Cart;
+import com.thrift.hft.entity.Product;
 import com.thrift.hft.entity.ThriftOrder;
 import com.thrift.hft.entity.User;
 import com.thrift.hft.exceptions.NotFoundException;
@@ -14,6 +15,7 @@ import com.thrift.hft.request.CreateOrderRequest;
 import com.thrift.hft.request.PlaceOrderRequest;
 import com.thrift.hft.response.RazorPayResponse;
 import com.thrift.hft.response.TokenResponse;
+import com.thrift.hft.service.IEmailService;
 import com.thrift.hft.service.IOrderService;
 import com.thrift.hft.utils.MailUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,11 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -46,6 +53,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private ThriftOrderRepository thriftOrderRepository;
+
+    @Autowired
+    IEmailService emailService;
 
 
 
@@ -74,15 +84,40 @@ public class OrderServiceImpl implements IOrderService {
         log.info("OrderServiceImpl - Inside placeOrder method");
         Cart cart = cartRepository.findById(placeOrderRequest.getCartId()).orElseThrow(()->new NotFoundException("Cart not found"));
         ThriftOrder thriftOrder = thriftOrderRepository.findByRazorpayOrderId(placeOrderRequest.getOrderId()).orElseThrow(()-> new NotFoundException("Order not found"));
-
-        User user = userRepository.findById(cart.getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
-        MailUtils.send(user.getEmail(),"Order Placed","Hello",null);
+       // String body = MailUtils.generateEmailContent(user.getName(), thriftOrder.getId(), thriftOrder.getCreationDate().toString(), cart.getCartAmount(), cart.getProductList());
+        processOrder(cart,thriftOrder);
+       // MailUtils.send(user.getEmail(),"Order Placed",body,null);
         cart.setIsOrdered(Boolean.TRUE);
         thriftOrder.setTransactionId(placeOrderRequest.getTransactionId());
         thriftOrder.setOrderStatus("PAID");
         cartRepository.save(cart);
         thriftOrderRepository.save(thriftOrder);
 
+    }
+
+    private void processOrder(Cart cart,ThriftOrder thriftOrder) throws MessagingException {
+        User user = userRepository.findById(cart.getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("userName", user.getName());
+        model.put("orderId", thriftOrder.getId());
+        model.put("orderDate", LocalDateTime.now().toString());
+        model.put("totalAmount", cart.getCartAmount().toString());
+
+        List<Product> productList = cart.getProductList();
+
+        List<Map<String, String>> items = new ArrayList<>();
+        for (Product product : productList) {
+            Map<String, String> item = new HashMap<>();
+            item.put("product", product.getDescription());
+            item.put("brand", product.getBrand().toString());
+            item.put("price", product.getPrize().toString());
+            items.add(item);
+        }
+
+        model.put("items", items);
+
+        emailService.sendOrderConfirmationEmail(user.getEmail(), model);
     }
 
 

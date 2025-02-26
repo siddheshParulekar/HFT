@@ -1,6 +1,5 @@
 package com.thrift.hft.dto;
 
-import com.thrift.hft.entity.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +18,8 @@ public class CartDTO {
     String id;
     Long userId;
     BigDecimal cartAmount;
+    BigDecimal deliveryCharges;
+    BigDecimal total;
     Boolean isOrdered ;
     List<ProductDTO> productList;
 
