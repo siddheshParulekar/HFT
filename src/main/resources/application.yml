@@ -44,6 +44,18 @@ spring:
     show-sql: true
     hikari:
       connection-timeout: 5000
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hustlefreethrift@gmail.com
+    password: hwgvjaaogrhytbvj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER

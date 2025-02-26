@@ -38,17 +38,20 @@ public class CartServiceImpl implements ICartService {
         Cart cart;
         if (optionalCart.isPresent()) {
             cart = optionalCart.get();
-            List<Product> products = new ArrayList<>(cart.getProductList());            if (products.contains(product))
+            List<Product> products = new ArrayList<>(cart.getProductList());
+            if (products.contains(product))
                 throw new AlreadyExistsException("This article already has been added to the cart");
             products.add(product);
             cart.setProductList(products);
             cart.setCartAmount(getCartValue(products));
+            cart.setTotal(cart.getCartAmount().add(BigDecimal.valueOf(1000)));
         } else {
             List<Product> products = new ArrayList<>();
             products.add(product);
            cart = Cart.builder().userId(tokenResponse.getUserId())
                                 .productList(products)
-                   .cartAmount(getCartValue(products)).build();
+                   .cartAmount(getCartValue(products))
+                   .total(getCartValue(products).add(BigDecimal.valueOf(1000))).build();
         }
 
         Cart savedCart = cartRepository.save(cart);
@@ -74,6 +77,7 @@ public class CartServiceImpl implements ICartService {
         }
 
         cart.setCartAmount(getCartValue(cart.getProductList()));
+        cart.setTotal(cart.getCartAmount().add(BigDecimal.valueOf(1000)));
         cartRepository.save(cart);
     }
 
