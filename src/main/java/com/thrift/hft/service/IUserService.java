@@ -27,6 +27,6 @@ public interface IUserService {
 
     UserDTO editAddress(String addressId,EditAddressRequest editAddressRequest,TokenResponse tokenResponse);
 
-
+    UserDTO setDefaultAddress(String addressId,TokenResponse tokenResponse);
 
 }

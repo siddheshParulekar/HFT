@@ -43,6 +43,7 @@ public class Cart extends Auditable<String> {
     @Builder.Default
     Boolean isOrdered = Boolean.FALSE;
     BigDecimal total;
+    @Builder.Default
     BigDecimal deliveryCharges = new BigDecimal(1000);
 
     public CartDTO getCartDTO(){

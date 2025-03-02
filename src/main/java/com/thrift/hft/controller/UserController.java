@@ -71,4 +71,10 @@ public class UserController {
         return ResponseEntityUtils.get(userService.editAddress(addressId,editAddressRequest, CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))), MSG_USER_ADDED);
     }
 
+    @PutMapping("/set-default/{addressId}")
+    public ResponseEntity<ResponseDTO> setDefaultAddress(@PathVariable("addressId") String addressId,HttpServletRequest request){
+        logger.info("OrderController - Inside setDefaultAddress method");
+        return ResponseEntityUtils.get(userService.setDefaultAddress(addressId,CommonUtils.getTokenResponse(request.getHeader(AUTHORIZATION))),"Default address updated successfully");
+    }
+
 }

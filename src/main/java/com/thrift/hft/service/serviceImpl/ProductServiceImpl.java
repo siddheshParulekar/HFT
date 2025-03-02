@@ -153,10 +153,11 @@ public class ProductServiceImpl implements IProductService {
         if (pr.getFiles().length>4)
             throw new InvalidException("You can upload at most four images per  article");
 
-        for (MultipartFile file: pr.getFiles()){
-            if (checkForDuplicate(file,tokenResponse.getUserId()))
-                throw new AlreadyExistsException("Article with same image already exists");
-        }
+        //TODO:Siddhesh we might have to add this check
+//        for (MultipartFile file: pr.getFiles()){
+//            if (checkForDuplicate(file,tokenResponse.getUserId()))
+//                throw new AlreadyExistsException("Article with same image already exists");
+//        }
 
         Product product = productRepository.save(new Product(pr.getDescription(), pr.getPrize(), CommonUtils.getCondition(pr.getCondition()),
                CommonUtils.getCategory( pr.getCategory()),CommonUtils.getSubCategory(pr.getSubCategory()), CommonUtils.getBrand(pr.getBrand()), tokenResponse.getUserId(),CommonUtils.getSize( pr.getSize()),CommonUtils.getColor(pr.getColor())));

@@ -1,14 +1,12 @@
 package com.thrift.hft.entity;
 
 import com.thrift.hft.audit.Auditable;
+import com.thrift.hft.enums.DeliveryStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
@@ -30,5 +28,8 @@ public class ThriftOrder extends Auditable<String> {
     String razorpayOrderId;
     Long userId;
     String transactionId;
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    DeliveryStatus deliveryStatus = DeliveryStatus.PROCESSING;
 
 }
