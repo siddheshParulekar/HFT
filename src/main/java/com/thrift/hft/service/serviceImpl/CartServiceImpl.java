@@ -44,6 +44,7 @@ public class CartServiceImpl implements ICartService {
             products.add(product);
             cart.setProductList(products);
             cart.setCartAmount(getCartValue(products));
+
             cart.setTotal(cart.getCartAmount().add(BigDecimal.valueOf(1000)));
         } else {
             List<Product> products = new ArrayList<>();

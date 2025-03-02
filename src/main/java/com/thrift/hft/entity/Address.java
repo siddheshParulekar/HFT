@@ -35,9 +35,10 @@ public class Address extends Auditable<String> {
     @Enumerated(EnumType.STRING)
     AddressType addressType;
     Long userId;
+    Boolean isDefault;
 
 
     public AddressDTO getAddressDTO(){
-        return new AddressDTO(id,userName,houseNumber,streetAddress,landmark,city,state,pinCode,country,addressType,userId);
+        return new AddressDTO(id,userName,houseNumber,streetAddress,landmark,city,state,pinCode,country,addressType,userId,isDefault);
     }
 }

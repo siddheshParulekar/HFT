@@ -24,4 +24,5 @@ public class AddressDTO {
     String country = "India";
     AddressType addressType;
     Long userId;
+    Boolean isDefault;
 }

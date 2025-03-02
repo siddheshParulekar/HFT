@@ -97,6 +97,9 @@ public class UserServiceImpl implements IUserService {
         if (addAddressRequest.getAddressType() != null)
             addressRepository.deleteByAddressTypeAndUserId(addAddressRequest.getAddressType(), tokenResponse.getUserId());
 
+        boolean isFirstAddress = addressRepository.findByUserId(tokenResponse.getUserId()).isEmpty();
+
+
         addressRepository.save(Address.builder()
                         .userName(addAddressRequest.getName())
                         .houseNumber(addAddressRequest.getHouseNumber())
@@ -107,7 +110,9 @@ public class UserServiceImpl implements IUserService {
                         .pinCode(addAddressRequest.getPinCode())
                         .country(addAddressRequest.getCountry())
                         .addressType(addAddressRequest.getAddressType())
-                        .userId(tokenResponse.getUserId()).build()
+                        .userId(tokenResponse.getUserId())
+                        .isDefault(isFirstAddress).build()
+
                 );
 
         return user.getUserDTO();
@@ -165,6 +170,27 @@ public class UserServiceImpl implements IUserService {
 
         return user.getUserDTO();
     }
+
+    @Override
+    public UserDTO setDefaultAddress(String addressId,TokenResponse tokenResponse) {
+        User user = userRepository.findById(tokenResponse.getUserId()).orElseThrow(() -> new NotFoundException("user not found"));
+        Address address = addressRepository.findById(addressId).orElseThrow(() -> new NotFoundException("Address with give Id Does not exist"));
+
+        if (!address.getUserId().equals(tokenResponse.getUserId())) {
+            throw new InvalidException("You are not authorized to edit this address");
+        }
+        List<Address> addressList = addressRepository.findByUserId(tokenResponse.getUserId());
+        addressList.stream()
+                .filter(Address::getIsDefault)
+                .forEach(a -> {
+                    a.setIsDefault(false);
+                    addressRepository.save(a);
+                });
+        address.setIsDefault(Boolean.TRUE);
+        addressRepository.save(address);
+        return user.getUserDTO();
+    }
+
 
     public LoginResponse processOAuthPostLog(String email,String name){
         logger.info("UserServiceImpl - Inside processOAuthPostLog method");

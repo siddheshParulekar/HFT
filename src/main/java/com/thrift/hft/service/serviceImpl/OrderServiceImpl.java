@@ -3,6 +3,8 @@ package com.thrift.hft.service.serviceImpl;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.thrift.hft.dto.OrderDTO;
+import com.thrift.hft.dto.ProductDTO;
 import com.thrift.hft.entity.Cart;
 import com.thrift.hft.entity.Product;
 import com.thrift.hft.entity.ThriftOrder;
@@ -119,6 +121,16 @@ public class OrderServiceImpl implements IOrderService {
 
         emailService.sendOrderConfirmationEmail(user.getEmail(), model);
     }
+
+
+    @Override
+    public OrderDTO viewOrder(String orderId) {
+        ThriftOrder thriftOrder = thriftOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order with given id not found"));
+        Cart cart = cartRepository.findById(thriftOrder.getCartId()).get();
+        List<ProductDTO> productList = cart.getCartDTO().getProductList();
+        return new OrderDTO(thriftOrder.getId(), thriftOrder.getCreationDate(),productList, thriftOrder.getAddressId(),thriftOrder.getAmount(),thriftOrder.getOrderStatus(),thriftOrder.getUserId(),thriftOrder.getDeliveryStatus());
+    }
+
 
 
 }
